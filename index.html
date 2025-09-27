@@ -187,6 +187,16 @@
         .pop-in {
             animation: pop-in 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px) rotate(-3deg); }
+            75% { transform: translateX(5px) rotate(3deg); }
+        }
+
+        .shake-animation {
+            animation: shake 0.4s ease-in-out;
+        }
         
         @keyframes dice-tumble {
             0%   { transform: rotate(0deg) scale(1); }
@@ -386,6 +396,11 @@
                  <h3 class="font-bold text-lg" style="color: var(--accent);">Aqua Power</h3>
                  <p>Use one of three powerful, single-use abilities per game.</p>
                  <ul class="list-disc list-inside space-y-1"><li><b>Past Lives:</b> Undoes your last completed move.</li><li><b>Bomb Splash:</b> Click to activate, then click a 💣 to replace it with a random aqua pet.</li><li><b>Exchange Please:</b> Click to activate, then click any animal on the grid to swap it.</li></ul>
+                 <h3 class="font-bold text-lg" style="color: var(--accent);">Special Blocks</h3>
+                 <ul class="list-disc list-inside space-y-1">
+                    <li><b>Wild Card (👑):</b> A rare treasure! This special piece acts as any animal and can complete any line. Appears once per game.</li>
+                    <li><b>Cursed Block (☠️):</b> An immovable obstacle! This block cannot be removed by Bomb Splash or swapped with Exchange Please. Appears once per game.</li>
+                 </ul>
                  <h3 class="font-bold text-lg" style="color: var(--accent);">Scoring</h3>
                  <ul class="list-disc list-inside space-y-1"><li><b>3 in a line:</b> 3 points</li><li><b>4 in a line:</b> 8 points</li><li><b>5 in a line:</b> 10 points</li><li><b>6 in a line:</b> 14 points</li><li><b>7 in a line:</b> 20 points</li>
                  <li><b>Cross Bonus:</b> Scores on the 4th row or 4th column are doubled!</li>
@@ -431,12 +446,14 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             const AQUA_SYMBOLS = { 'Shell': '🐚', 'Jellyfish': '🪼', 'Octopus': '🐙', 'Pufferfish': '🐡', 'Crab': '🦀', 'Whale': '🐋' };
+            const SPECIAL_SYMBOLS = { 'WILD': '👑', 'CURSED': '☠️' };
             const SYMBOLS = Object.values(AQUA_SYMBOLS);
-            const SYMBOL_COLORS = { '🐚': 'text-[#D2B48C]', '🪼': 'text-[#87CEEB]', '🐙': 'text-[#9370DB]', '🐡': 'text-[#FFD700]', '🦀': 'text-[#DC143C]', '🐋': 'text-[#4169E1]' };
+            const SYMBOL_COLORS = { '🐚': 'text-[#D2B48C]', '🪼': 'text-[#87CEEB]', '🐙': 'text-[#9370DB]', '🐡': 'text-[#FFD700]', '🦀': 'text-[#DC143C]', '🐋': 'text-[#4169E1]', '👑': 'text-yellow-400' };
             const SCORING_RULES = { 7: 20, 6: 14, 5: 10, 4: 8, 3: 3 };
             const GRID_SIZE = 7, MAX_TURNS = 24, CROSS_MULTIPLIER = 2, LINE_DEATH_PENALTY = -5, CROSS_DEATH_PENALTY = -10, STUCK_BLOCK_PENALTY = -1, MIN_SEQUENCE_LENGTH = 3;
             let gameStateManager, gridData, currentRoll, firstPlacementCell, turnCount, highScore, stuckBlocks;
             let lastGameState, hasSuperpowerBeenUsed, activeSuperpower, cellToExchange, currentTotalScore;
+            let cursedBlockTurn, wildcardTurn;
             let gridCells = [];
             
             const DOMElements = (() => {
@@ -460,7 +477,7 @@
                 unlocked: false, context: null, sounds: new Map(),
                 init() { this.createAudioContext(); this.createSounds(); },
                 createAudioContext() { try { this.context = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} },
-                createSounds() { if (!this.context) return; const s = { 'pop': [1200,.1,.05], 'roll': [220,.2,.2], 'hover': [660,.05,.1], 'invalid': [150,.3,.2], 'power-activate': [880,.15,.2], 'power-use': [1047,.2,.3], 'combo-3': [[523,659],.15], 'combo-4': [[523,659,784],.2], 'combo-5': [[523,659,784,880],.25] }; for (const k in s) { if (Array.isArray(s[k][0])) this.sounds.set(k, ()=>this.playSequence(...s[k])); else this.sounds.set(k, ()=>this.playTone(...s[k])); } },
+                createSounds() { if (!this.context) return; const s = { 'pop': [1200,.1,.05], 'roll': [220,.2,.2], 'hover': [660,.05,.1], 'invalid': [150,.3,.2], 'power-activate': [880,.15,.2], 'power-use': [1047,.2,.3], 'combo-3': [[523,659],.15], 'combo-4': [[523,659,784],.2], 'combo-5': [[523,659,784,880],.25], 'chime': [1047, .15, .2], 'thud': [100, .3, .1] }; for (const k in s) { if (Array.isArray(s[k][0])) this.sounds.set(k, ()=>this.playSequence(...s[k])); else this.sounds.set(k, ()=>this.playTone(...s[k])); } },
                 playTone(freq, vol, dur) { if (!this.unlocked || !this.context) return; try { const o = this.context.createOscillator(), g = this.context.createGain(); o.connect(g); g.connect(this.context.destination); o.frequency.setValueAtTime(freq, this.context.currentTime); g.gain.setValueAtTime(0, this.context.currentTime); g.gain.linearRampToValueAtTime(vol*.1, this.context.currentTime+.01); g.gain.exponentialRampToValueAtTime(.001, this.context.currentTime+dur); o.start(); o.stop(this.context.currentTime+dur); } catch (e) {} },
                 playSequence(freqs, dur) { freqs.forEach((f, i) => setTimeout(()=>this.playTone(f,.1,dur/freqs.length), i*(dur*1000/freqs.length))); },
                 unlock() { if (this.unlocked) return; document.getElementById('audio-unlocker').play().finally(() => { this.unlocked = true; }); },
@@ -470,6 +487,7 @@
             function createAmbientBubbles() {
                 const bubbleContainer = DOMElements['bubbles-bg'];
                 if (!bubbleContainer) return;
+                bubbleContainer.innerHTML = '';
                 for (let i = 0; i < 20; i++) {
                     const bubble = document.createElement('span');
                     bubble.className = 'bubble';
@@ -502,11 +520,27 @@
 
             const scoreCalculator = {
                 calculateLineScore(line, type, lineIndex) {
-                    let score = 0, found = false, temp = [...line];
+                    let score = 0, found = false;
+                    let temp = [...line];
+
                     for (let len = GRID_SIZE; len >= MIN_SEQUENCE_LENGTH; len--) {
                         for (let i = 0; i <= temp.length - len; i++) {
                             const slice = temp.slice(i, i + len);
-                            if (slice[0] && slice.every(s => s === slice[0])) { score += SCORING_RULES[len]; found = true; temp.fill(null, i, i + len); }
+
+                            if (slice.includes(null)) continue;
+                            if (slice.includes(SPECIAL_SYMBOLS.CURSED)) continue;
+
+                            const regularSymbols = slice.filter(s => s !== SPECIAL_SYMBOLS.WILD);
+                            
+                            if (regularSymbols.length > 0 && new Set(regularSymbols).size === 1) {
+                                score += SCORING_RULES[len];
+                                found = true;
+                                temp.fill(null, i, i + len);
+                            } else if (regularSymbols.length === 0) { // All wildcards
+                                score += SCORING_RULES[len];
+                                found = true;
+                                temp.fill(null, i, i + len);
+                            }
                         }
                     }
                     if (found) return { score };
@@ -517,6 +551,10 @@
                     for (let i = 0; i <= line.length - MIN_SEQUENCE_LENGTH; i++) {
                         const window = line.slice(i, i + MIN_SEQUENCE_LENGTH);
                         let winnable = true;
+                        if (window.includes(SPECIAL_SYMBOLS.CURSED)) {
+                            winnable = false;
+                            continue;
+                        }
                         for (let j = 0; j < MIN_SEQUENCE_LENGTH; j++) {
                             let r, c;
                             if (type === 'row') { r = lineIndex; c = i + j; } 
@@ -525,7 +563,7 @@
                             if (stuckBlocks.has(`${r},${c}`)) { winnable = false; break; }
                         }
                         if (!winnable) continue;
-                        const uniqueSymbols = new Set(window.filter(cell => cell));
+                        const uniqueSymbols = new Set(window.filter(cell => cell && cell !== SPECIAL_SYMBOLS.WILD));
                         if (uniqueSymbols.size > 1) winnable = false;
                         if (winnable) return false;
                     }
@@ -534,7 +572,7 @@
                 calculateBonusGrids(gridData) {
                     let points = 0;
                     for (let size=GRID_SIZE; size>=2; size--) for (let r=0; r<=GRID_SIZE-size; r++) for (let c=0; c<=GRID_SIZE-size; c++) {
-                        const s = gridData[r][c]; if (!s) continue; let isGrid = true;
+                        const s = gridData[r][c]; if (!s || !SYMBOLS.includes(s)) continue; let isGrid = true;
                         for (let i=r; i<r+size && isGrid; i++) for (let j=c; j<c+size && isGrid; j++) if(gridData[i][j] !== s) isGrid = false;
                         if(isGrid) points += size*size;
                     }
@@ -550,7 +588,7 @@
                     if (stuckBlocks.has(`${r},${c}`)) classes += ' stuck-cell'; 
                     return classes; 
                 },
-                updateCell(cell, r, c) { const symbol = gridData[r][c]; cell.className = this.getCellClasses(r, c); if (symbol) { cell.textContent = symbol; cell.classList.add(SYMBOL_COLORS[symbol], 'pop-in'); } else if (stuckBlocks.has(`${r},${c}`)) { cell.textContent = '💣'; } else { cell.textContent = ''; } },
+                updateCell(cell, r, c) { const symbol = gridData[r][c]; cell.className = this.getCellClasses(r, c); if (symbol) { cell.textContent = symbol; if(SYMBOL_COLORS[symbol]) cell.classList.add(SYMBOL_COLORS[symbol]); cell.classList.add('pop-in'); } else if (stuckBlocks.has(`${r},${c}`)) { cell.textContent = '💣'; } else { cell.textContent = ''; } },
                 addCellEventListeners(cell) { cell.addEventListener('click', handleCellClick); cell.addEventListener('mouseenter', () => { if (gameStateManager.is('AWAITING_PLACEMENT') || activeSuperpower) audioSystem.play('hover'); }); }
             };
 
@@ -580,6 +618,10 @@
                 currentRoll = []; firstPlacementCell = null; turnCount = 0; stuckBlocks = new Set();
                 highScore = parseInt(localStorage.getItem('waterWonderHighScore')) || 0;
                 hasSuperpowerBeenUsed = false; activeSuperpower = null; lastGameState = null; cellToExchange = null; currentTotalScore = 0;
+                cursedBlockTurn = Math.floor(Math.random() * 8) + 5; // Turn 5-12
+                wildcardTurn = Math.floor(Math.random() * 8) + 15; // Turn 15-22
+                if (wildcardTurn === cursedBlockTurn) wildcardTurn++;
+
                 audioSystem.init();
                 DOMElements['high-score'].textContent = highScore;
                 ['game-over-modal', 'exchange-modal', 'rules-modal'].forEach(id => DOMElements[id].classList.remove('is-open'));
@@ -678,9 +720,9 @@
                 if (!dice1 || !dice2) return;
                 if (gameStateManager.is('AWAITING_PLACEMENT') && currentRoll.length === 2) {
                     dice1.textContent = currentRoll[0];
-                    dice1.className = `w-14 h-14 lg:w-16 lg:h-16 rounded-xl glass-card-prominent shadow-lg flex items-center justify-center text-3xl lg:text-4xl ${SYMBOL_COLORS[currentRoll[0]]}`;
+                    dice1.className = `w-14 h-14 lg:w-16 lg:h-16 rounded-xl glass-card-prominent shadow-lg flex items-center justify-center text-3xl lg:text-4xl ${SYMBOL_COLORS[currentRoll[0]] || ''}`;
                     dice2.textContent = currentRoll[1];
-                    dice2.className = `w-14 h-14 lg:w-16 lg:h-16 rounded-xl glass-card-prominent shadow-lg flex items-center justify-center text-3xl lg:text-4xl ${SYMBOL_COLORS[currentRoll[1]]}`;
+                    dice2.className = `w-14 h-14 lg:w-16 lg:h-16 rounded-xl glass-card-prominent shadow-lg flex items-center justify-center text-3xl lg:text-4xl ${SYMBOL_COLORS[currentRoll[1]] || ''}`;
                 } else {
                     dice1.textContent = '?';
                     dice1.className = 'w-14 h-14 lg:w-16 lg:h-16 rounded-xl glass-card shadow-lg flex items-center justify-center text-3xl lg:text-4xl';
@@ -693,16 +735,32 @@
 
             function handleRollDice() {
                 if (!gameStateManager.is('AWAITING_ROLL') || gameStateManager.is('GAME_OVER')) return;
+                
+                const nextTurn = turnCount + 1;
+                let tempRoll;
+
+                if (nextTurn === cursedBlockTurn) {
+                    audioSystem.play('thud');
+                    tempRoll = [SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)], SPECIAL_SYMBOLS.CURSED];
+                } else if (nextTurn === wildcardTurn) {
+                    audioSystem.play('chime');
+                    tempRoll = [SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)], SPECIAL_SYMBOLS.WILD];
+                } else {
+                    audioSystem.play('roll');
+                    tempRoll = [SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)], SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)]];
+                }
+                
+                currentRoll = tempRoll.sort(() => Math.random() - 0.5); // Shuffle the roll
+
                 gameStateManager.setState('ANIMATING_ROLL');
                 updateControlsState();
-                audioSystem.play('roll');
                 const d1 = document.getElementById('dice-1'), d2 = document.getElementById('dice-2');
                 d1.classList.add('dice-tumble');
                 d2.classList.add('dice-tumble');
+                
                 setTimeout(() => {
                     d1.classList.remove('dice-tumble');
                     d2.classList.remove('dice-tumble');
-                    currentRoll = [SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)], SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)]];
                     saveStateForUndo();
                     gameStateManager.setState('AWAITING_PLACEMENT');
                     updateControlsState();
@@ -712,7 +770,7 @@
             function handleCellClick(e) {
                 const cell = e.target.closest('[data-row]'); if (!cell) return;
                 const r = parseInt(cell.dataset.row), c = parseInt(cell.dataset.col);
-                if (activeSuperpower) { handleSuperpowerCellClick(r, c); return; }
+                if (activeSuperpower) { handleSuperpowerCellClick(r, c, cell); return; }
                 if (!gameStateManager.is('AWAITING_PLACEMENT')) return;
                 if (firstPlacementCell) { handleSecondPlacement(r, c, cell); } else { handleFirstPlacement(r, c); }
             }
@@ -722,7 +780,7 @@
                 const { r: pR, c: pC } = firstPlacementCell;
                 if (pR === r && pC === c) { gridData[r][c] = null; firstPlacementCell = null; updateGridCell(r, c); updateSuperpowerButtonsUI(); return; }
                 if ((Math.abs(pR-r)+Math.abs(pC-c)===1) && !gridData[r][c]) { completeMove(r, c); } 
-                else { cell.classList.add('invalid-move-shake'); setTimeout(() => cell.classList.remove('invalid-move-shake'), 400); audioSystem.play('invalid'); }
+                else { cell.classList.add('shake-animation'); setTimeout(() => cell.classList.remove('shake-animation'), 400); audioSystem.play('invalid'); }
             }
 
             function saveStateForUndo() { lastGameState = { gridData: JSON.parse(JSON.stringify(gridData)), turnCount, stuckBlocks: new Set(stuckBlocks), currentRoll: [...currentRoll] }; }
@@ -811,7 +869,13 @@
                 document.body.classList.toggle('cursor-target', activeSuperpower === 'bombSplash');
             }
 
-            function handleSuperpowerCellClick(r, c) {
+            function handleSuperpowerCellClick(r, c, cell) {
+                if (gridData[r][c] === SPECIAL_SYMBOLS.CURSED) {
+                    audioSystem.play('invalid');
+                    cell.classList.add('shake-animation');
+                    setTimeout(() => cell.classList.remove('shake-animation'), 400);
+                    return;
+                }
                 if (activeSuperpower === 'bombSplash' && stuckBlocks.has(`${r},${c}`)) {
                     stuckBlocks.delete(`${r},${c}`); gridData[r][c] = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
                     consumeSuperpower(); gameStateManager.setState('AWAITING_ROLL'); renderControls();
