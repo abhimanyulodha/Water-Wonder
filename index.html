@@ -17,7 +17,7 @@
             --accent: #20B2AA; /* LightSeaGreen */
             --accent-light: #E0F2F1;
             --accent-gradient: linear-gradient(135deg, #20B2AA 0%, #48D1CC 100%);
-            --diagonal-highlight: linear-gradient(135deg, #E6E6FA 0%, #D8BFD8 100%); /* Periwinkle Blue */
+            --cross-highlight: linear-gradient(135deg, #E6E6FA 0%, #D8BFD8 100%); /* Periwinkle Blue */
             --stuck-block: linear-gradient(135deg, #A7C7E7 0%, #B7D7F7 100%);
             --glass-primary: rgba(255, 255, 255, 0.25);
             --glass-secondary: rgba(255, 255, 255, 0.15);
@@ -181,8 +181,8 @@
             animation: pulse 2s infinite;
         }
         
-        .diagonal-cell {
-            background: var(--diagonal-highlight) !important;
+        .cross-cell {
+            background: var(--cross-highlight) !important;
         }
         
         .stuck-cell {
@@ -329,7 +329,7 @@
                 <div class="grid grid-cols-2 gap-2 lg:gap-3 text-center">
                     <div class="glass-card rounded-xl px-3 py-2"><h3 class="text-xs font-semibold uppercase tracking-wider mb-1" style="color: #4A5568;">Rows</h3><p id="rows-total-score" class="text-lg font-bold">0</p></div>
                     <div class="glass-card rounded-xl px-3 py-2"><h3 class="text-xs font-semibold uppercase tracking-wider mb-1" style="color: #4A5568;">Columns</h3><p id="cols-total-score" class="text-lg font-bold">0</p></div>
-                    <div class="glass-card rounded-xl px-3 py-2"><h3 class="text-xs font-semibold uppercase tracking-wider mb-1" style="color: #4A5568;">Diagonal</h3><p id="diag-total-score" class="text-lg font-bold" style="color: #FFD700;">0</p></div>
+                    <div class="glass-card rounded-xl px-3 py-2"><h3 class="text-xs font-semibold uppercase tracking-wider mb-1" style="color: #4A5568;">Cross</h3><p id="cross-total-score" class="text-lg font-bold" style="color: #FFD700;">0</p></div>
                     <div class="glass-card rounded-xl px-3 py-2"><h3 class="text-xs font-semibold uppercase tracking-wider mb-1" style="color: #4A5568;">Grid Bonus</h3><p id="bonus-grid-score" class="text-lg font-bold" style="color: #FFD700;">0</p></div>
                 </div>
                 
@@ -355,7 +355,8 @@
                  <p>Use one of three powerful, single-use abilities per game.</p>
                  <ul class="list-disc list-inside space-y-1"><li><b>Past Lives:</b> Undoes your last completed move.</li><li><b>Bomb Splash:</b> Click to activate, then click a 💣 to replace it with a random aqua pet.</li><li><b>Exchange Please:</b> Click to activate, then click any animal on the grid to swap it.</li></ul>
                  <h3 class="font-bold text-lg" style="color: var(--accent);">Scoring</h3>
-                 <ul class="list-disc list-inside space-y-1"><li><b>3 in a line:</b> 3 points</li><li><b>4 in a line:</b> 8 points</li><li><b>5 in a line:</b> 10 points</li><li><b>6 in a line:</b> 14 points</li><li><b>7 in a line:</b> 20 points</li><li><b>Diagonal Bonus:</b> Scores on the main diagonal are doubled!</li><li><b>Grid Bonus:</b> 2x2, 3x3, etc. grids of the same animal give bonus points (size * size).</li><li><b>Penalty:</b> A row or column that can no longer form a 3-symbol sequence gets a -5 penalty.</li></ul>
+                 <ul class="list-disc list-inside space-y-1"><li><b>3 in a line:</b> 3 points</li><li><b>4 in a line:</b> 8 points</li><li><b>5 in a line:</b> 10 points</li><li><b>6 in a line:</b> 14 points</li><li><b>7 in a line:</b> 20 points</li><li><b>Cross Bonus:</b> Scores on the 4th row or 4th column are doubled!</li>
+                 <li><b>Grid Bonus:</b> 2x2, 3x3, etc. grids of the same animal give bonus points (size * size).</li><li><b>Penalty:</b> A row or column that can no longer form a 3-symbol sequence gets a -5 penalty. A "dead" line on the cross gets a -10 penalty.</li></ul>
             </div>
         </div>
     </div>
@@ -370,7 +371,7 @@
                 <div class="grid grid-cols-2 gap-2">
                     <div class="text-left">Rows: <span id="final-rows-score" class="float-right font-bold">0</span></div>
                     <div class="text-left">Columns: <span id="final-cols-score" class="float-right font-bold">0</span></div>
-                    <div class="text-left">Diagonal: <span id="final-diag-score" class="float-right font-bold">0</span></div>
+                    <div class="text-left">Cross: <span id="final-cross-score" class="float-right font-bold">0</span></div>
                     <div class="text-left">Bonus Grids: <span id="final-bonus-score" class="float-right font-bold">0</span></div>
                     <div class="text-left col-span-2 border-t pt-2 mt-2">Empty Penalty: <span id="final-penalty-score" class="float-right font-bold">0</span></div>
                 </div>
@@ -399,7 +400,7 @@
             const SYMBOLS = Object.values(AQUA_SYMBOLS);
             const SYMBOL_COLORS = { '🐚': 'text-[#D2B48C]', '🪼': 'text-[#87CEEB]', '🐙': 'text-[#9370DB]', '🐡': 'text-[#FFD700]', '🦀': 'text-[#DC143C]', '🐋': 'text-[#4169E1]' };
             const SCORING_RULES = { 7: 20, 6: 14, 5: 10, 4: 8, 3: 3 };
-            const GRID_SIZE = 7, MAX_TURNS = 24, DIAGONAL_MULTIPLIER = 2, LINE_DEATH_PENALTY = -5, STUCK_BLOCK_PENALTY = -1, MIN_SEQUENCE_LENGTH = 3;
+            const GRID_SIZE = 7, MAX_TURNS = 24, CROSS_MULTIPLIER = 2, LINE_DEATH_PENALTY = -5, CROSS_DEATH_PENALTY = -10, STUCK_BLOCK_PENALTY = -1, MIN_SEQUENCE_LENGTH = 3;
             let gameStateManager, gridData, currentRoll, firstPlacementCell, turnCount, highScore, stuckBlocks;
             let lastGameState, hasSuperpowerBeenUsed, activeSuperpower, cellToExchange;
             let gridCells = [];
@@ -408,11 +409,11 @@
                 const elements = {};
                 const elementIds = [
                     'game-board', 'controls-area', 'row-scores-display', 'col-scores-display', 'total-score', 
-                    'high-score', 'rows-total-score', 'cols-total-score', 'diag-total-score', 'bonus-grid-score', 
+                    'high-score', 'rows-total-score', 'cols-total-score', 'cross-total-score', 'bonus-grid-score', 
                     'empty-block-penalty', 'rules-btn', 'rules-modal', 'close-rules-btn', 
                     'game-over-modal', 'game-over-reason', 'close-game-over-btn', 'final-score-modal', 
                     'high-score-modal', 'play-again-btn', 'score-breakdown', 'final-rows-score', 
-                    'final-cols-score', 'final-diag-score', 'final-bonus-score', 'final-penalty-score', 
+                    'final-cols-score', 'final-cross-score', 'final-bonus-score', 'final-penalty-score', 
                     'exchange-modal', 'exchange-options', 'progress-bar-fill',
                     'new-game-btn', 'game-board-container', 'scoring-panel'
                 ];
@@ -448,11 +449,15 @@
                     for (let i = 0; i <= line.length - MIN_SEQUENCE_LENGTH; i++) {
                         const window = line.slice(i, i + MIN_SEQUENCE_LENGTH);
                         let winnable = true;
+                        // For cross, the row/col index is always known
+                        const isCrossRow = type === 'row' && lineIndex === 3;
+                        const isCrossCol = type === 'col' && lineIndex === 3;
+
                         for (let j = 0; j < MIN_SEQUENCE_LENGTH; j++) {
                             let r, c;
                             if (type === 'row') { r = lineIndex; c = i + j; } 
-                            else if (type === 'col') { r = i + j; c = lineIndex; } 
-                            else { r = i + j; c = GRID_SIZE - 1 - (i + j); }
+                            else { r = i + j; c = lineIndex; }
+                            
                             if (stuckBlocks.has(`${r},${c}`)) { winnable = false; break; }
                         }
                         if (!winnable) continue;
@@ -475,7 +480,12 @@
             
             const gridManager = {
                 createCellElement(r, c) { const cell = document.createElement('div'); cell.dataset.row = r; cell.dataset.col = c; cell.className = this.getCellClasses(r, c); return cell; },
-                getCellClasses(r, c) { let classes = 'grid-cell bg-[#E0F2F1]'; if (r + c === GRID_SIZE - 1) classes += ' diagonal-cell'; if (stuckBlocks.has(`${r},${c}`)) classes += ' stuck-cell'; return classes; },
+                getCellClasses(r, c) { 
+                    let classes = 'grid-cell bg-[#E0F2F1]'; 
+                    if (r === 3 || c === 3) classes += ' cross-cell';
+                    if (stuckBlocks.has(`${r},${c}`)) classes += ' stuck-cell'; 
+                    return classes; 
+                },
                 updateCell(cell, r, c) { const symbol = gridData[r][c]; cell.className = this.getCellClasses(r, c); if (symbol) { cell.textContent = symbol; cell.classList.add(SYMBOL_COLORS[symbol], 'pop-in'); } else if (stuckBlocks.has(`${r},${c}`)) { cell.textContent = '💣'; } else { cell.textContent = ''; } },
                 addCellEventListeners(cell) { cell.addEventListener('click', handleCellClick); cell.addEventListener('mouseenter', () => { if (gameStateManager.is('AWAITING_PLACEMENT') || activeSuperpower) audioSystem.play('hover'); }); }
             };
@@ -675,7 +685,7 @@
                 DOMElements['high-score-modal'].textContent = highScore;
                 DOMElements['final-rows-score'].textContent = DOMElements['rows-total-score'].textContent;
                 DOMElements['final-cols-score'].textContent = DOMElements['cols-total-score'].textContent;
-                DOMElements['final-diag-score'].textContent = DOMElements['diag-total-score'].textContent;
+                DOMElements['final-cross-score'].textContent = DOMElements['cross-total-score'].textContent;
                 DOMElements['final-bonus-score'].textContent = DOMElements['bonus-grid-score'].textContent;
                 DOMElements['final-penalty-score'].textContent = DOMElements['empty-block-penalty'].textContent;
                 setTimeout(() => DOMElements['game-over-modal'].classList.add('is-open'), 500);
@@ -685,15 +695,24 @@
             function detectStuckBlocks() { stuckBlocks.clear(); for (let r=0; r<GRID_SIZE; r++) for (let c=0; c<GRID_SIZE; c++) if (!gridData[r][c]) { const n=[[-1,0],[1,0],[0,-1],[0,1]]; if (n.every(([dr,dc])=>{const nr=r+dr,nc=c+dc; return nr<0||nr>=GRID_SIZE||nc<0||nc>=GRID_SIZE||gridData[nr][nc]})) stuckBlocks.add(`${r},${c}`); } updateFullGrid(); DOMElements['empty-block-penalty'].textContent = -stuckBlocks.size; }
             
             function updateAllScores() {
-                const rS = calculateRowScores(), cS = calculateColumnScores(), dS = calculateDiagonalScore(), bS = scoreCalculator.calculateBonusGrids(gridData);
-                updateScoreDisplays(rS.total, cS.total, dS, bS, stuckBlocks.size); updateIndividualScores(rS.individual, cS.individual);
+                const rS = calculateRowScores(), cS = calculateColumnScores(), crS = calculateCrossScore(), bS = scoreCalculator.calculateBonusGrids(gridData);
+                updateScoreDisplays(rS.total, cS.total, crS, bS, stuckBlocks.size); updateIndividualScores(rS.individual, cS.individual);
             }
-            function calculateTotalScore() { return calculateRowScores().total + calculateColumnScores().total + calculateDiagonalScore() + scoreCalculator.calculateBonusGrids(gridData) - stuckBlocks.size; }
-            function calculateRowScores() { let t=0, ind=[]; for (let i=0; i<GRID_SIZE; i++) { const {score:s} = scoreCalculator.calculateLineScore(gridData[i],'row',i); ind.push(s); t+=s; } return {total:t, individual:ind}; }
-            function calculateColumnScores() { let t=0, ind=[]; for (let i=0; i<GRID_SIZE; i++) { const col=gridData.map(row=>row[i]); const {score:s} = scoreCalculator.calculateLineScore(col,'col',i); ind.push(s); t+=s; } return {total:t, individual:ind}; }
-            function calculateDiagonalScore() { const d=Array.from({length:GRID_SIZE},(_,i)=>gridData[i][GRID_SIZE-1-i]); const {score:s} = scoreCalculator.calculateLineScore(d,'diag',0); return s*DIAGONAL_MULTIPLIER; }
+            function calculateTotalScore() { return calculateRowScores().total + calculateColumnScores().total + calculateCrossScore() + scoreCalculator.calculateBonusGrids(gridData) - stuckBlocks.size; }
+            function calculateRowScores() { let t=0, ind=[]; for (let i=0; i<GRID_SIZE; i++) { if(i === 3) { ind.push(0); continue; } const {score:s} = scoreCalculator.calculateLineScore(gridData[i],'row',i); ind.push(s); t+=s; } return {total:t, individual:ind}; }
+            function calculateColumnScores() { let t=0, ind=[]; for (let i=0; i<GRID_SIZE; i++) { if(i === 3) { ind.push(0); continue; } const col=gridData.map(row=>row[i]); const {score:s} = scoreCalculator.calculateLineScore(col,'col',i); ind.push(s); t+=s; } return {total:t, individual:ind}; }
+            function calculateCrossScore() { 
+                let totalScore = 0;
+                const crossRow = gridData[3];
+                const crossCol = gridData.map(row => row[3]);
+                const rowResult = scoreCalculator.calculateLineScore(crossRow, 'row', 3);
+                if (rowResult.score > 0) { totalScore += rowResult.score * CROSS_MULTIPLIER; } else if (rowResult.score === LINE_DEATH_PENALTY) { totalScore += CROSS_DEATH_PENALTY; }
+                const colResult = scoreCalculator.calculateLineScore(crossCol, 'col', 3);
+                if (colResult.score > 0) { totalScore += colResult.score * CROSS_MULTIPLIER; } else if (colResult.score === LINE_DEATH_PENALTY) { totalScore += CROSS_DEATH_PENALTY; }
+                return totalScore;
+            }
 
-            function updateScoreDisplays(r,c,d,b,s) { const t=r+c+d+b-s; animateScoreUpdate(DOMElements['total-score'], t); animateScoreUpdate(DOMElements['rows-total-score'], r); animateScoreUpdate(DOMElements['cols-total-score'], c); animateScoreUpdate(DOMElements['diag-total-score'], d); animateScoreUpdate(DOMElements['bonus-grid-score'], b); }
+            function updateScoreDisplays(r,c,cross,b,s) { const t=r+c+cross+b-s; animateScoreUpdate(DOMElements['total-score'], t); animateScoreUpdate(DOMElements['rows-total-score'], r); animateScoreUpdate(DOMElements['cols-total-score'], c); animateScoreUpdate(DOMElements['cross-total-score'], cross); animateScoreUpdate(DOMElements['bonus-grid-score'], b); }
             function animateScoreUpdate(el, val) { if (parseInt(el.textContent) !== val) { el.classList.add('score-update'); el.textContent = val; setTimeout(() => el.classList.remove('score-update'), 500); } }
             function updateIndividualScores(rS, cS) { rS.forEach((s,i)=>updateScoreElement(`row-score-${i}`,s)); cS.forEach((s,i)=>updateScoreElement(`col-score-${i}`,s)); }
             function updateScoreElement(id, score) { const el=document.getElementById(id); if (el&&parseInt(el.textContent)!==score) { el.textContent=score; el.classList.toggle('text-red-500', score<0); if(score!==0) { el.classList.add('score-flash'); setTimeout(()=>el.classList.remove('score-flash'),600); } } }
