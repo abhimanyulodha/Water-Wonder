@@ -30,9 +30,38 @@
             font-family: 'Poppins', sans-serif;
             background: var(--bg);
             color: var(--text);
-            overflow-y: auto;
+            overflow: hidden; /* Prevent scrollbars from ambient bubbles */
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+        }
+
+        #bubbles-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bubble {
+            position: absolute;
+            bottom: -50px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: floatUp 10s infinite;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-120vh) translateX(20px);
+                opacity: 0;
+            }
         }
         
         .rounded-card {
@@ -283,10 +312,12 @@
     </style>
 </head>
 <body class="p-2 lg:p-4">
+    <div id="bubbles-bg"></div>
     <audio id="audio-unlocker" src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=" preload="auto"></audio>
     
     <main id="game-container" class="w-full max-w-5xl mx-auto flex flex-col lg:flex-row gap-4 lg:gap-6 items-center lg:items-stretch pt-8 lg:pt-16">
-        <div class="w-full lg:w-2/3">
+        <div class="w-full lg:w-2/3 relative">
+            <div id="effects-container" class="absolute inset-0 pointer-events-none z-10 overflow-hidden"></div>
             <div id="game-board-container" class="p-2 lg:p-6 rounded-card shadow-lg h-full">
                 <div class="grid grid-cols-8 gap-1 lg:gap-3 h-full">
                     <div id="game-board" class="col-span-7 grid grid-cols-7 gap-1 lg:gap-2"></div>
@@ -309,8 +340,9 @@
                     <button id="new-game-btn" class="flex-1 py-2 px-4 themed-button text-white font-semibold rounded-xl text-sm" style="background: var(--accent-gradient);">New Game</button>
                 </div>
 
-                <div class="w-full h-2.5 bg-teal-100 rounded-full overflow-hidden">
+                <div class="relative w-full h-2.5 bg-teal-100 rounded-full overflow-hidden">
                     <div id="progress-bar-fill" class="h-full rounded-full transition-all duration-300" style="width: 0%; background: var(--accent-gradient);"></div>
+                    <span id="progress-snail" class="text-xl absolute -top-2" style="left: -12px; transition: left 0.3s ease;">🐌</span>
                 </div>
                 
                 <div id="controls-area" class="controls-area"></div>
@@ -355,8 +387,10 @@
                  <p>Use one of three powerful, single-use abilities per game.</p>
                  <ul class="list-disc list-inside space-y-1"><li><b>Past Lives:</b> Undoes your last completed move.</li><li><b>Bomb Splash:</b> Click to activate, then click a 💣 to replace it with a random aqua pet.</li><li><b>Exchange Please:</b> Click to activate, then click any animal on the grid to swap it.</li></ul>
                  <h3 class="font-bold text-lg" style="color: var(--accent);">Scoring</h3>
-                 <ul class="list-disc list-inside space-y-1"><li><b>3 in a line:</b> 3 points</li><li><b>4 in a line:</b> 8 points</li><li><b>5 in a line:</b> 10 points</li><li><b>6 in a line:</b> 14 points</li><li><b>7 in a line:</b> 20 points</li><li><b>Cross Bonus:</b> Scores on the 4th row or 4th column are doubled!</li>
-                 <li><b>Grid Bonus:</b> 2x2, 3x3, etc. grids of the same animal give bonus points (size * size).</li><li><b>Penalty:</b> A row or column that can no longer form a 3-symbol sequence gets a -5 penalty. A "dead" line on the cross gets a -10 penalty.</li></ul>
+                 <ul class="list-disc list-inside space-y-1"><li><b>3 in a line:</b> 3 points</li><li><b>4 in a line:</b> 8 points</li><li><b>5 in a line:</b> 10 points</li><li><b>6 in a line:</b> 14 points</li><li><b>7 in a line:</b> 20 points</li>
+                 <li><b>Cross Bonus:</b> Scores on the 4th row or 4th column are doubled!</li>
+                 <li><b>Grid Bonus:</b> 2x2, 3x3, etc. grids of the same animal give bonus points (size * size).</li>
+                 <li><b>Penalty:</b> A row or column that can no longer form a 3-symbol sequence gets a -5 penalty. A "dead" line on the cross gets a -10 penalty.</li></ul>
             </div>
         </div>
     </div>
@@ -402,7 +436,7 @@
             const SCORING_RULES = { 7: 20, 6: 14, 5: 10, 4: 8, 3: 3 };
             const GRID_SIZE = 7, MAX_TURNS = 24, CROSS_MULTIPLIER = 2, LINE_DEATH_PENALTY = -5, CROSS_DEATH_PENALTY = -10, STUCK_BLOCK_PENALTY = -1, MIN_SEQUENCE_LENGTH = 3;
             let gameStateManager, gridData, currentRoll, firstPlacementCell, turnCount, highScore, stuckBlocks;
-            let lastGameState, hasSuperpowerBeenUsed, activeSuperpower, cellToExchange;
+            let lastGameState, hasSuperpowerBeenUsed, activeSuperpower, cellToExchange, currentTotalScore;
             let gridCells = [];
             
             const DOMElements = (() => {
@@ -415,7 +449,8 @@
                     'high-score-modal', 'play-again-btn', 'score-breakdown', 'final-rows-score', 
                     'final-cols-score', 'final-cross-score', 'final-bonus-score', 'final-penalty-score', 
                     'exchange-modal', 'exchange-options', 'progress-bar-fill',
-                    'new-game-btn', 'game-board-container', 'scoring-panel'
+                    'new-game-btn', 'game-board-container', 'scoring-panel', 'bubbles-bg', 
+                    'effects-container', 'progress-snail'
                 ];
                 elementIds.forEach(id => { elements[id] = document.getElementById(id); });
                 return elements;
@@ -425,12 +460,45 @@
                 unlocked: false, context: null, sounds: new Map(),
                 init() { this.createAudioContext(); this.createSounds(); },
                 createAudioContext() { try { this.context = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} },
-                createSounds() { if (!this.context) return; const s = { 'place': [440,.1,.1], 'roll': [220,.2,.2], 'hover': [660,.05,.1], 'invalid': [150,.3,.2], 'power-activate': [880,.15,.2], 'power-use': [1047,.2,.3], 'combo-3': [[523,659],.15], 'combo-4': [[523,659,784],.2], 'combo-5': [[523,659,784,880],.25] }; for (const k in s) { if (Array.isArray(s[k][0])) this.sounds.set(k, ()=>this.playSequence(...s[k])); else this.sounds.set(k, ()=>this.playTone(...s[k])); } },
+                createSounds() { if (!this.context) return; const s = { 'pop': [1200,.1,.05], 'roll': [220,.2,.2], 'hover': [660,.05,.1], 'invalid': [150,.3,.2], 'power-activate': [880,.15,.2], 'power-use': [1047,.2,.3], 'combo-3': [[523,659],.15], 'combo-4': [[523,659,784],.2], 'combo-5': [[523,659,784,880],.25] }; for (const k in s) { if (Array.isArray(s[k][0])) this.sounds.set(k, ()=>this.playSequence(...s[k])); else this.sounds.set(k, ()=>this.playTone(...s[k])); } },
                 playTone(freq, vol, dur) { if (!this.unlocked || !this.context) return; try { const o = this.context.createOscillator(), g = this.context.createGain(); o.connect(g); g.connect(this.context.destination); o.frequency.setValueAtTime(freq, this.context.currentTime); g.gain.setValueAtTime(0, this.context.currentTime); g.gain.linearRampToValueAtTime(vol*.1, this.context.currentTime+.01); g.gain.exponentialRampToValueAtTime(.001, this.context.currentTime+dur); o.start(); o.stop(this.context.currentTime+dur); } catch (e) {} },
                 playSequence(freqs, dur) { freqs.forEach((f, i) => setTimeout(()=>this.playTone(f,.1,dur/freqs.length), i*(dur*1000/freqs.length))); },
                 unlock() { if (this.unlocked) return; document.getElementById('audio-unlocker').play().finally(() => { this.unlocked = true; }); },
                 play(soundName) { this.sounds.get(soundName)?.(); }
             };
+
+            function createAmbientBubbles() {
+                const bubbleContainer = DOMElements['bubbles-bg'];
+                if (!bubbleContainer) return;
+                for (let i = 0; i < 20; i++) {
+                    const bubble = document.createElement('span');
+                    bubble.className = 'bubble';
+                    const size = Math.random() * 20 + 5 + 'px';
+                    bubble.style.width = size;
+                    bubble.style.height = size;
+                    bubble.style.left = Math.random() * 100 + '%';
+                    bubble.style.animationDuration = Math.random() * 8 + 7 + 's';
+                    bubble.style.animationDelay = Math.random() * 5 + 's';
+                    bubbleContainer.appendChild(bubble);
+                }
+            }
+            
+            function triggerScoreBubbles(count) {
+                const effectsContainer = DOMElements['effects-container'];
+                if (!effectsContainer) return;
+                for(let i = 0; i < count; i++) {
+                    const bubble = document.createElement('span');
+                    bubble.className = 'bubble';
+                    const size = Math.random() * 25 + 10 + 'px';
+                    bubble.style.width = size;
+                    bubble.style.height = size;
+                    bubble.style.left = Math.random() * 100 + '%';
+                    const duration = Math.random() * 4 + 2;
+                    bubble.style.animationDuration = duration + 's';
+                    effectsContainer.appendChild(bubble);
+                    setTimeout(() => bubble.remove(), duration * 1000);
+                }
+            }
 
             const scoreCalculator = {
                 calculateLineScore(line, type, lineIndex) {
@@ -449,10 +517,6 @@
                     for (let i = 0; i <= line.length - MIN_SEQUENCE_LENGTH; i++) {
                         const window = line.slice(i, i + MIN_SEQUENCE_LENGTH);
                         let winnable = true;
-                        // For cross, the row/col index is always known
-                        const isCrossRow = type === 'row' && lineIndex === 3;
-                        const isCrossCol = type === 'col' && lineIndex === 3;
-
                         for (let j = 0; j < MIN_SEQUENCE_LENGTH; j++) {
                             let r, c;
                             if (type === 'row') { r = lineIndex; c = i + j; } 
@@ -504,9 +568,10 @@
             }
 
             function updateProgressBar() {
-                if (!DOMElements['progress-bar-fill']) return;
+                if (!DOMElements['progress-bar-fill'] || !DOMElements['progress-snail']) return;
                 const percentage = (turnCount / MAX_TURNS) * 100;
                 DOMElements['progress-bar-fill'].style.width = `${percentage}%`;
+                DOMElements['progress-snail'].style.left = `calc(${percentage}% - 12px)`;
             }
 
             function initGame() {
@@ -514,7 +579,7 @@
                 gridData = Array(GRID_SIZE).fill(null).map(() => Array(GRID_SIZE).fill(null));
                 currentRoll = []; firstPlacementCell = null; turnCount = 0; stuckBlocks = new Set();
                 highScore = parseInt(localStorage.getItem('waterWonderHighScore')) || 0;
-                hasSuperpowerBeenUsed = false; activeSuperpower = null; lastGameState = null; cellToExchange = null;
+                hasSuperpowerBeenUsed = false; activeSuperpower = null; lastGameState = null; cellToExchange = null; currentTotalScore = 0;
                 audioSystem.init();
                 DOMElements['high-score'].textContent = highScore;
                 ['game-over-modal', 'exchange-modal', 'rules-modal'].forEach(id => DOMElements[id].classList.remove('is-open'));
@@ -624,7 +689,7 @@
                 }
             }
 
-            function handleSymbolSelect(symbol) { if (!gameStateManager.is('PRE_GAME')) return; audioSystem.unlock(); audioSystem.play('place'); gridData[0][0] = symbol; gameStateManager.setState('AWAITING_ROLL'); updateGridCell(0, 0); renderControls(); }
+            function handleSymbolSelect(symbol) { if (!gameStateManager.is('PRE_GAME')) return; audioSystem.unlock(); audioSystem.play('pop'); gridData[0][0] = symbol; gameStateManager.setState('AWAITING_ROLL'); updateGridCell(0, 0); renderControls(); }
 
             function handleRollDice() {
                 if (!gameStateManager.is('AWAITING_ROLL') || gameStateManager.is('GAME_OVER')) return;
@@ -661,7 +726,7 @@
             }
 
             function saveStateForUndo() { lastGameState = { gridData: JSON.parse(JSON.stringify(gridData)), turnCount, stuckBlocks: new Set(stuckBlocks), currentRoll: [...currentRoll] }; }
-            function completeMove(r, c) { gameStateManager.setState('PROCESSING_TURN'); gridData[r][c] = currentRoll[1]; firstPlacementCell = null; turnCount++; updateGridCell(r, c); audioSystem.play('place'); setTimeout(processTurnEnd, 300); }
+            function completeMove(r, c) { gameStateManager.setState('PROCESSING_TURN'); gridData[r][c] = currentRoll[1]; firstPlacementCell = null; turnCount++; updateGridCell(r, c); audioSystem.play('pop'); setTimeout(processTurnEnd, 300); }
             
             function processTurnEnd() {
                 if (gameStateManager.is('GAME_OVER')) return;
@@ -695,10 +760,18 @@
             function detectStuckBlocks() { stuckBlocks.clear(); for (let r=0; r<GRID_SIZE; r++) for (let c=0; c<GRID_SIZE; c++) if (!gridData[r][c]) { const n=[[-1,0],[1,0],[0,-1],[0,1]]; if (n.every(([dr,dc])=>{const nr=r+dr,nc=c+dc; return nr<0||nr>=GRID_SIZE||nc<0||nc>=GRID_SIZE||gridData[nr][nc]})) stuckBlocks.add(`${r},${c}`); } updateFullGrid(); DOMElements['empty-block-penalty'].textContent = -stuckBlocks.size; }
             
             function updateAllScores() {
+                const oldScore = currentTotalScore;
                 const rS = calculateRowScores(), cS = calculateColumnScores(), crS = calculateCrossScore(), bS = scoreCalculator.calculateBonusGrids(gridData);
-                updateScoreDisplays(rS.total, cS.total, crS, bS, stuckBlocks.size); updateIndividualScores(rS.individual, cS.individual);
+                const newScore = rS.total + cS.total + crS + bS - stuckBlocks.size;
+                const scoreDiff = newScore - oldScore;
+                if(scoreDiff > 0) {
+                    triggerScoreBubbles(Math.min(10, Math.ceil(scoreDiff / 2)));
+                }
+                currentTotalScore = newScore;
+                updateScoreDisplays(rS.total, cS.total, crS, bS, stuckBlocks.size); 
+                updateIndividualScores(rS.individual, cS.individual);
             }
-            function calculateTotalScore() { return calculateRowScores().total + calculateColumnScores().total + calculateCrossScore() + scoreCalculator.calculateBonusGrids(gridData) - stuckBlocks.size; }
+            function calculateTotalScore() { return currentTotalScore; }
             function calculateRowScores() { let t=0, ind=[]; for (let i=0; i<GRID_SIZE; i++) { if(i === 3) { ind.push(0); continue; } const {score:s} = scoreCalculator.calculateLineScore(gridData[i],'row',i); ind.push(s); t+=s; } return {total:t, individual:ind}; }
             function calculateColumnScores() { let t=0, ind=[]; for (let i=0; i<GRID_SIZE; i++) { if(i === 3) { ind.push(0); continue; } const col=gridData.map(row=>row[i]); const {score:s} = scoreCalculator.calculateLineScore(col,'col',i); ind.push(s); t+=s; } return {total:t, individual:ind}; }
             function calculateCrossScore() { 
@@ -816,6 +889,7 @@
             };
 
             initGame();
+            createAmbientBubbles();
             setupEventListeners();
         });
     </script>
