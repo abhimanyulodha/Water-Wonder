@@ -328,11 +328,11 @@
         }
         
         @keyframes dice-tumble {
-            0%   { transform: rotate(0deg) scale(1); }
+            0%   { transform: rotate(0deg) scale(1); filter: blur(0px); }
             25%  { transform: rotate(-90deg) scale(1.05); }
-            50%  { transform: rotate(-180deg) scale(1.1); }
+            50%  { transform: rotate(-180deg) scale(1.1); filter: blur(3px); }
             75%  { transform: rotate(-270deg) scale(1.05); }
-            100% { transform: rotate(-360deg) scale(1); }
+            100% { transform: rotate(-360deg) scale(1); filter: blur(0px); }
         }
         
         .dice-tumble {
@@ -1060,7 +1060,32 @@
             }
 
             updateScoreDisplays(r, c, cross, b, s) { const t = r + c + cross + b - s; this.animateScoreUpdate(this.DOMElements['total-score'], t); this.animateScoreUpdate(this.DOMElements['rows-total-score'], r); this.animateScoreUpdate(this.DOMElements['cols-total-score'], c); this.animateScoreUpdate(this.DOMElements['cross-total-score'], cross); this.animateScoreUpdate(this.DOMElements['bonus-grid-score'], b); }
-            animateScoreUpdate(el, val) { if (parseInt(el.textContent) !== val) { el.classList.add('score-update'); el.textContent = val; setTimeout(() => el.classList.remove('score-update'), 500); } }
+            
+            animateScoreUpdate(el, val) {
+                const startVal = parseInt(el.textContent) || 0;
+                if (startVal === val) return;
+
+                el.classList.add('score-update');
+                const duration = 500;
+                const stepTime = 20;
+                const totalSteps = duration / stepTime;
+                const increment = (val - startVal) / totalSteps;
+                let currentVal = startVal;
+                let step = 0;
+
+                const timer = setInterval(() => {
+                    step++;
+                    if (step >= totalSteps) {
+                        clearInterval(timer);
+                        el.textContent = val;
+                        setTimeout(() => el.classList.remove('score-update'), 100);
+                        return;
+                    }
+                    currentVal += increment;
+                    el.textContent = Math.round(currentVal);
+                }, stepTime);
+            }
+
             updateIndividualScores(rS, cS) { rS.forEach((s, i) => this.updateScoreElement(`row-score-${i}`, s)); cS.forEach((s, i) => this.updateScoreElement(`col-score-${i}`, s)); }
             updateScoreElement(id, score) { const el = document.getElementById(id); if (el && parseInt(el.textContent) !== score) { el.textContent = score; el.classList.toggle('text-red-500', score < 0); if (score !== 0) { el.classList.add('score-flash'); setTimeout(() => el.classList.remove('score-flash'), 600); } } }
 
