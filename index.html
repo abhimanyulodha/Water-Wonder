@@ -613,33 +613,58 @@
 
             const scoreCalculator = {
                 calculateLineScore(line, type, lineIndex) {
-                    let score = 0, found = false;
+                    let totalScore = 0;
                     let temp = [...line];
+                    let foundAnySequence = false;
 
-                    for (let len = GRID_SIZE; len >= MIN_SEQUENCE_LENGTH; len--) {
-                        for (let i = 0; i <= temp.length - len; i++) {
-                            const slice = temp.slice(i, i + len);
+                    // Keep looking for sequences until no more can be found
+                    let foundSequenceThisPass = true;
+                    while (foundSequenceThisPass) {
+                        foundSequenceThisPass = false;
+                        
+                        // Check from longest to shortest sequences
+                        for (let len = GRID_SIZE; len >= MIN_SEQUENCE_LENGTH; len--) {
+                            for (let i = 0; i <= temp.length - len; i++) {
+                                const slice = temp.slice(i, i + len);
 
-                            if (slice.includes(null)) continue;
-                            if (slice.includes(SPECIAL_SYMBOLS.CURSED)) continue;
+                                if (slice.includes(null)) continue;
+                                if (slice.includes(SPECIAL_SYMBOLS.CURSED)) continue;
 
-                            const regularSymbols = slice.filter(s => s !== SPECIAL_SYMBOLS.WILD);
-                            
-                            if (regularSymbols.length > 0 && new Set(regularSymbols).size === 1) {
-                                score += SCORING_RULES[len];
-                                found = true;
-                                temp.fill(null, i, i + len);
-                            } else if (regularSymbols.length === 0) { // All wildcards
-                                score += SCORING_RULES[len];
-                                found = true;
-                                temp.fill(null, i, i + len);
+                                // Check if this slice can form a valid sequence
+                                if (this.isValidSequence(slice)) {
+                                    totalScore += SCORING_RULES[len];
+                                    foundAnySequence = true;
+                                    foundSequenceThisPass = true;
+                                    // Mark these positions as used
+                                    temp.fill(null, i, i + len);
+                                    break; // Found a sequence, start over to find the next longest
+                                }
                             }
+                            if (foundSequenceThisPass) break; // Start over with longest sequences first
                         }
                     }
-                    if (found) return { score };
+                    
+                    if (foundAnySequence) return { score: totalScore };
                     if (this.isLineDead(line, type, lineIndex)) return { score: LINE_DEATH_PENALTY };
                     return { score: 0 };
                 },
+                
+                isValidSequence(slice) {
+                    // All wildcards is valid
+                    if (slice.every(s => s === SPECIAL_SYMBOLS.WILD)) return true;
+                    
+                    // Get all non-wild symbols
+                    const regularSymbols = slice.filter(s => s !== SPECIAL_SYMBOLS.WILD);
+                    
+                    // If no regular symbols, it's all wildcards (already handled above)
+                    if (regularSymbols.length === 0) return true;
+                    
+                    // If all regular symbols are the same, then wildcards can fill in
+                    if (new Set(regularSymbols).size === 1) return true;
+                    
+                    return false;
+                },
+                
                 isLineDead(line, type, lineIndex) {
                     for (let i = 0; i <= line.length - MIN_SEQUENCE_LENGTH; i++) {
                         const window = line.slice(i, i + MIN_SEQUENCE_LENGTH);
@@ -656,8 +681,22 @@
                             if (stuckBlocks.has(`${r},${c}`)) { winnable = false; break; }
                         }
                         if (!winnable) continue;
-                        const uniqueSymbols = new Set(window.filter(cell => cell && cell !== SPECIAL_SYMBOLS.WILD));
-                        if (uniqueSymbols.size > 1) winnable = false;
+                        
+                        // Check if this window could potentially form a valid sequence
+                        const nonNullSymbols = window.filter(cell => cell !== null);
+                        if (nonNullSymbols.length > 0) {
+                            const regularSymbols = nonNullSymbols.filter(s => s !== SPECIAL_SYMBOLS.WILD);
+                            // If we have regular symbols, they must all be the same for it to be winnable
+                            if (regularSymbols.length > 0 && new Set(regularSymbols).size <= 1) {
+                                winnable = true;
+                            } else if (regularSymbols.length === 0) {
+                                // Only wildcards and nulls, still winnable
+                                winnable = true;
+                            } else {
+                                winnable = false;
+                            }
+                        }
+                        
                         if (winnable) return false;
                     }
                     return true;
@@ -790,8 +829,11 @@
                         <div id="dice-1" class="w-14 h-14 lg:w-16 lg:h-16 rounded-xl glass-card shadow-lg flex items-center justify-center text-3xl lg:text-4xl">?</div>
                         <div id="dice-2" class="w-14 h-14 lg:w-16 lg:h-16 rounded-xl glass-card shadow-lg flex items-center justify-center text-3xl lg:text-4xl">?</div>
                     </div>
-                    <div id="alloha-power-panel" class="glass-card rounded-xl px-3 py-3 text-center">
-                        <h2 class="text-sm font-semibold uppercase tracking-wider mb-3" style="color: var(--accent);">ALLOHA Powers</h2>
+                    <div id="alloha-power-panel" class="glass-card rounded-xl px-3 py-4 text-center">
+                        <h2 class="text-sm font-semibold uppercase tracking-wider mb-3 flex items-center justify-center gap-2" style="color: #4A5568;">
+                            <span style="font-size: 16px;">🪄</span>
+                            ALLOHA Powers
+                        </h2>
                         <div class="grid grid-cols-3 gap-2 text-xs">
                             <button id="past-lives-btn" class="superpower-btn">
                                 <div>Past</div>
@@ -801,9 +843,9 @@
                                 <div>Bomb</div>
                                 <div>Bae</div>
                             </button>
-                            <button id="exchange-please-btn" class="superpower-btn">
-                                <div>Exchange</div>
-                                <div>Please</div>
+                            <button id="no-return-btn" class="superpower-btn">
+                                <div>No</div>
+                                <div>Return</div>
                             </button>
                         </div>
                     </div>
@@ -931,17 +973,47 @@
                 updateIndividualScores(rS.individual, cS.individual);
             }
             function calculateTotalScore() { return currentTotalScore; }
-            function calculateRowScores() { let t=0, ind=[]; for (let i=0; i<GRID_SIZE; i++) { if(i === 3) { ind.push(0); continue; } const {score:s} = scoreCalculator.calculateLineScore(gridData[i],'row',i); ind.push(s); t+=s; } return {total:t, individual:ind}; }
-            function calculateColumnScores() { let t=0, ind=[]; for (let i=0; i<GRID_SIZE; i++) { if(i === 3) { ind.push(0); continue; } const col=gridData.map(row=>row[i]); const {score:s} = scoreCalculator.calculateLineScore(col,'col',i); ind.push(s); t+=s; } return {total:t, individual:ind}; }
+            function calculateRowScores() { 
+                let t=0, ind=[]; 
+                for (let i=0; i<GRID_SIZE; i++) { 
+                    const {score:s} = scoreCalculator.calculateLineScore(gridData[i],'row',i); 
+                    ind.push(s); 
+                    t+=s; // Include all rows (including cross row) in total
+                } 
+                return {total:t, individual:ind}; 
+            }
+            function calculateColumnScores() { 
+                let t=0, ind=[]; 
+                for (let i=0; i<GRID_SIZE; i++) { 
+                    const col=gridData.map(row=>row[i]); 
+                    const {score:s} = scoreCalculator.calculateLineScore(col,'col',i); 
+                    ind.push(s); 
+                    t+=s; // Include all columns (including cross column) in total
+                } 
+                return {total:t, individual:ind}; 
+            }
             function calculateCrossScore() { 
-                let totalScore = 0;
+                let bonusScore = 0;
                 const crossRow = gridData[3];
                 const crossCol = gridData.map(row => row[3]);
+                
                 const rowResult = scoreCalculator.calculateLineScore(crossRow, 'row', 3);
-                if (rowResult.score > 0) { totalScore += rowResult.score * CROSS_MULTIPLIER; } else if (rowResult.score === LINE_DEATH_PENALTY) { totalScore += CROSS_DEATH_PENALTY; }
                 const colResult = scoreCalculator.calculateLineScore(crossCol, 'col', 3);
-                if (colResult.score > 0) { totalScore += colResult.score * CROSS_MULTIPLIER; } else if (colResult.score === LINE_DEATH_PENALTY) { totalScore += CROSS_DEATH_PENALTY; }
-                return totalScore;
+                
+                // Add only the BONUS points (the extra points from doubling)
+                if (rowResult.score > 0) { 
+                    bonusScore += rowResult.score; // This is the bonus (same as base score)
+                } else if (rowResult.score === LINE_DEATH_PENALTY) { 
+                    bonusScore += CROSS_DEATH_PENALTY - LINE_DEATH_PENALTY; // Extra penalty
+                }
+                
+                if (colResult.score > 0) { 
+                    bonusScore += colResult.score; // This is the bonus (same as base score)
+                } else if (colResult.score === LINE_DEATH_PENALTY) { 
+                    bonusScore += CROSS_DEATH_PENALTY - LINE_DEATH_PENALTY; // Extra penalty
+                }
+                
+                return bonusScore;
             }
 
             function updateScoreDisplays(r,c,cross,b,s) { const t=r+c+cross+b-s; animateScoreUpdate(DOMElements['total-score'], t); animateScoreUpdate(DOMElements['rows-total-score'], r); animateScoreUpdate(DOMElements['cols-total-score'], c); animateScoreUpdate(DOMElements['cross-total-score'], cross); animateScoreUpdate(DOMElements['bonus-grid-score'], b); }
@@ -955,15 +1027,15 @@
                 const isPowerActive = activeSuperpower !== null;
                 const pastLivesBtn = document.getElementById('past-lives-btn');
                 const bombBaeBtn = document.getElementById('bomb-bae-btn');
-                const exchangePleaseBtn = document.getElementById('exchange-please-btn');
+                const noReturnBtn = document.getElementById('no-return-btn');
 
                 if(pastLivesBtn) pastLivesBtn.disabled = isUsed || !lastGameState || isMidMove || isPowerActive;
                 if(bombBaeBtn) bombBaeBtn.disabled = isUsed || stuckBlocks.size === 0 || isMidMove || isPowerActive;
-                if(exchangePleaseBtn) exchangePleaseBtn.disabled = isUsed || isMidMove || isPowerActive;
+                if(noReturnBtn) noReturnBtn.disabled = isUsed || isMidMove || isPowerActive;
                 
-                [pastLivesBtn, bombBaeBtn, exchangePleaseBtn].forEach(btn => btn?.classList.remove('superpower-btn--active'));
+                [pastLivesBtn, bombBaeBtn, noReturnBtn].forEach(btn => btn?.classList.remove('superpower-btn--active'));
                 if (activeSuperpower) { 
-                    const id = { 'bombBae': 'bomb-bae-btn', 'exchangePlease': 'exchange-please-btn' }[activeSuperpower];
+                    const id = { 'bombBae': 'bomb-bae-btn', 'noReturn': 'no-return-btn' }[activeSuperpower];
                     const activeBtn = document.getElementById(id);
                     if(activeBtn) activeBtn.classList.add('superpower-btn--active');
                 }
@@ -980,7 +1052,7 @@
                 if (activeSuperpower === 'bombBae' && stuckBlocks.has(`${r},${c}`)) {
                     stuckBlocks.delete(`${r},${c}`); gridData[r][c] = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
                     consumeSuperpower(); gameStateManager.setState('AWAITING_ROLL'); renderControls();
-                } else if (activeSuperpower === 'exchangePlease' && gridData[r][c]) {
+                } else if (activeSuperpower === 'noReturn' && gridData[r][c]) {
                     showSymbolSelectorForExchange(r, c);
                 } else { audioSystem.play('invalid'); }
             }
@@ -1025,11 +1097,11 @@
                         gameStateManager.setState('SUPERPOWER_ACTIVE'); audioSystem.play('power-activate'); updateSuperpowerButtonsUI();
                     });
                 }
-                const exchangePleaseBtn = document.getElementById('exchange-please-btn');
-                if (exchangePleaseBtn) {
-                    exchangePleaseBtn.addEventListener('click', () => {
-                        if (exchangePleaseBtn.disabled) return;
-                        activeSuperpower = 'exchangePlease';
+                const noReturnBtn = document.getElementById('no-return-btn');
+                if (noReturnBtn) {
+                    noReturnBtn.addEventListener('click', () => {
+                        if (noReturnBtn.disabled) return;
+                        activeSuperpower = 'noReturn';
                         gameStateManager.setState('SUPERPOWER_ACTIVE'); audioSystem.play('power-activate'); updateSuperpowerButtonsUI();
                     });
                 }
