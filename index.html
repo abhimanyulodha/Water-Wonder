@@ -609,7 +609,7 @@
         <div class="modal-content w-full max-w-lg themed-modal p-6 transform scale-95 -translate-y-4">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-3xl font-bold" style="font-family: 'Pacifico', cursive; color: var(--accent);">How to Play</h2>
-                <button id="close-rules-btn" class="w-10 h-10 rounded-full text-xl flex items-center justify-center font-bold">×</button>
+                <button id="close-rules-btn" class="w-10 h-10 rounded-full text-xl flex items-center justify-center font-bold">Ã—</button>
             </div>
             <div class="space-y-4 text-gray-700 text-sm max-h-[70vh] overflow-y-auto pr-2">
                  <h3 class="font-bold text-lg" style="color: var(--accent);">The Objective</h3>
@@ -618,11 +618,11 @@
                  <ol class="list-decimal list-inside space-y-1"><li>Choose your starting Alloha.</li><li>Click "Roll Dice" to get two new Allohas.</li><li>Place both Allohas in any two empty, adjacent (not diagonal) squares.</li></ol>
                  <h3 class="font-bold text-lg" style="color: var(--accent);">ALLOHA Powers</h3>
                  <p>Use one of three powerful, single-use abilities per game.</p>
-                 <ul class="list-disc list-inside space-y-1"><li><b>Past Lives:</b> Undoes your last completed move.</li><li><b>Bomb Bae:</b> Click to activate, then click a stuck block (💣) to fill it with a random Alloha.</li><li><b>No Return:</b> Click to activate, then click any Alloha on the grid to swap it.</li></ul>
+                 <ul class="list-disc list-inside space-y-1"><li><b>Past Lives:</b> Undoes your last completed move.</li><li><b>Bomb Bae:</b> Click to activate, then click a stuck block (ðŸ’£) to fill it with a random Alloha.</li><li><b>No Return:</b> Click to activate, then click any Alloha on the grid to swap it.</li></ul>
                  <h3 class="font-bold text-lg" style="color: var(--accent);">Special Blocks</h3>
                  <ul class="list-disc list-inside space-y-1">
-                    <li><b>Wild Card (💎):</b> A rare treasure! This special piece acts as any Alloha and can complete any line. Appears once per game.</li>
-                    <li><b>Cursed Block (☠️):</b> An immovable obstacle! This block cannot be removed by Bomb Bae or swapped with No Return. Appears once per game.</li>
+                    <li><b>Wild Card (ðŸ’Ž):</b> A rare treasure! This special piece acts as any Alloha and can complete any line. Appears once per game.</li>
+                    <li><b>Cursed Block (â˜ ï¸):</b> An immovable obstacle! This block cannot be removed by Bomb Bae or swapped with No Return. Appears once per game.</li>
                  </ul>
                  <h3 class="font-bold text-lg" style="color: var(--accent);">Scoring</h3>
                  <ul class="list-disc list-inside space-y-1"><li><b>3 in a line:</b> 3 points</li><li><b>4 in a line:</b> 8 points</li><li><b>5 in a line:</b> 10 points</li><li><b>6 in a line:</b> 14 points</li><li><b>7 in a line:</b> 20 points</li>
@@ -635,7 +635,7 @@
     
     <div id="game-over-modal" class="modal fixed inset-0 bg-black/60 flex items-center justify-center p-4 opacity-0 invisible z-50 backdrop-blur-sm">
         <div class="modal-content w-full max-w-md text-center themed-modal p-8 transform scale-95 -translate-y-4 relative">
-            <button id="close-game-over-btn" class="absolute top-4 right-4 w-10 h-10 rounded-full text-xl flex items-center justify-center font-bold">×</button>
+            <button id="close-game-over-btn" class="absolute top-4 right-4 w-10 h-10 rounded-full text-xl flex items-center justify-center font-bold">Ã—</button>
             <h2 class="text-4xl font-bold mb-2" style="color: var(--accent); font-family: 'Pacifico', cursive;">Game Over!</h2>
             <p id="game-over-reason" class="text-lg mt-2 mb-4" style="color: var(--accent);"></p>
             <p id="final-score-modal" class="text-7xl font-bold my-4" style="color: var(--accent);">0</p>
@@ -669,10 +669,10 @@
         
         class Game {
             constructor() {
-                this.AQUA_SYMBOLS = { 'Shell': '🐚', 'Jellyfish': '🪼', 'Octopus': '🐙', 'Pufferfish': '🐡', 'Crab': '🦀', 'Whale': '🐋' };
-                this.SPECIAL_SYMBOLS = { 'WILD': '💎', 'CURSED': '☠️' };
+                this.AQUA_SYMBOLS = { 'Shell': 'ðŸš', 'Jellyfish': 'ðŸª¼', 'Octopus': 'ðŸ™', 'Pufferfish': 'ðŸ¡', 'Crab': 'ðŸ¦€', 'Whale': 'ðŸ‹' };
+                this.SPECIAL_SYMBOLS = { 'WILD': 'ðŸ’Ž', 'CURSED': 'â˜ ï¸' };
                 this.SYMBOLS = Object.values(this.AQUA_SYMBOLS);
-                this.SYMBOL_COLORS = { '🐚': 'text-[#D2B48C]', '🪼': 'text-[#87CEEB]', '🐙': 'text-[#9370DB]', '🐡': 'text-[#FFD700]', '🦀': 'text-[#DC143C]', '🐋': 'text-[#4169E1]', '💎': 'text-yellow-400' };
+                this.SYMBOL_COLORS = { 'ðŸš': 'text-[#D2B48C]', 'ðŸª¼': 'text-[#87CEEB]', 'ðŸ™': 'text-[#9370DB]', 'ðŸ¡': 'text-[#FFD700]', 'ðŸ¦€': 'text-[#DC143C]', 'ðŸ‹': 'text-[#4169E1]', 'ðŸ’Ž': 'text-yellow-400' };
                 this.SCORING_RULES = { 7: 20, 6: 14, 5: 10, 4: 8, 3: 3 };
                 this.GRID_SIZE = 7; this.MAX_TURNS = 24; this.CROSS_MULTIPLIER = 2; this.LINE_DEATH_PENALTY = -5; this.CROSS_DEATH_PENALTY = -10; this.STUCK_BLOCK_PENALTY = -1; this.MIN_SEQUENCE_LENGTH = 3;
                 
@@ -877,7 +877,7 @@
 
             createCellElement(r, c) { const cell = document.createElement('div'); cell.dataset.row = r; cell.dataset.col = c; cell.className = this.getCellClasses(r, c); return cell; }
             getCellClasses(r, c) { let classes = 'grid-cell bg-[#E0F2F1]'; if (r === 3 || c === 3) classes += ' cross-cell'; if (this.stuckBlocks.has(`${r},${c}`)) classes += ' stuck-cell'; return classes; }
-            updateCell(cell, r, c) { const symbol = this.gridData[r][c]; cell.className = this.getCellClasses(r, c); if (symbol) { cell.textContent = symbol; if(this.SYMBOL_COLORS[symbol]) cell.classList.add(this.SYMBOL_COLORS[symbol]); cell.classList.add('pop-in'); } else if (this.stuckBlocks.has(`${r},${c}`)) { cell.textContent = '💣'; } else { cell.textContent = ''; } }
+            updateCell(cell, r, c) { const symbol = this.gridData[r][c]; cell.className = this.getCellClasses(r, c); if (symbol) { cell.textContent = symbol; if(this.SYMBOL_COLORS[symbol]) cell.classList.add(this.SYMBOL_COLORS[symbol]); cell.classList.add('pop-in'); } else if (this.stuckBlocks.has(`${r},${c}`)) { cell.textContent = 'ðŸ’£'; } else { cell.textContent = ''; } }
             addCellEventListeners(cell) { cell.addEventListener('click', this.handleCellClick.bind(this)); cell.addEventListener('mouseenter', () => { if (this.gameStateManager.is('AWAITING_PLACEMENT') || this.activeSuperpower) this.audioPlay('hover'); }); }
 
             syncPanelHeights() { setTimeout(() => { if (window.innerWidth < 1024) { this.DOMElements['scoring-panel'].style.height = 'auto'; return; } const boardHeight = this.DOMElements['game-board-container']?.getBoundingClientRect().height; if (boardHeight && this.DOMElements['scoring-panel']) { this.DOMElements['scoring-panel'].style.height = `${boardHeight}px`; } }, 50); }
@@ -932,7 +932,7 @@
 
             renderGameControls() {
                 const wrapper = document.createElement('div'); wrapper.className = 'w-full flex flex-col justify-center gap-3 lg:gap-4';
-                wrapper.innerHTML = `<div class="flex justify-center items-center gap-2 lg:gap-4"><button id="roll-dice-btn" class="w-14 h-14 lg:w-16 lg:h-16 text-4xl lg:text-5xl flex items-center justify-center transition-transform hover:scale-110 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed" style="color: var(--accent);">🎲</button><div id="dice-1" class="w-14 h-14 lg:w-16 lg:h-16 rounded-xl glass-card shadow-lg flex items-center justify-center text-3xl lg:text-4xl">?</div><div id="dice-2" class="w-14 h-14 lg:w-16 lg:h-16 rounded-xl glass-card shadow-lg flex items-center justify-center text-3xl lg:text-4xl">?</div></div><div id="alloha-power-panel" class="glass-card rounded-xl px-3 py-4 text-center"><h2 class="text-sm font-semibold uppercase tracking-wider mb-3 flex items-center justify-center gap-2" style="color: #4A5568;"><span style="font-size: 16px;">🪄</span>ALLOHA Powers</h2><div class="grid grid-cols-3 gap-2 text-xs"><button id="past-lives-btn" class="superpower-btn"><div>Past</div><div>Lives</div></button><button id="bomb-bae-btn" class="superpower-btn"><div>Bomb</div><div>Bae</div></button><button id="no-return-btn" class="superpower-btn"><div>No</div><div>Return</div></button></div></div>`;
+                wrapper.innerHTML = `<div class="flex justify-center items-center gap-2 lg:gap-4"><button id="roll-dice-btn" class="w-14 h-14 lg:w-16 lg:h-16 text-4xl lg:text-5xl flex items-center justify-center transition-transform hover:scale-110 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed" style="color: var(--accent);">ðŸŽ²</button><div id="dice-1" class="w-14 h-14 lg:w-16 lg:h-16 rounded-xl glass-card shadow-lg flex items-center justify-center text-3xl lg:text-4xl">?</div><div id="dice-2" class="w-14 h-14 lg:w-16 lg:h-16 rounded-xl glass-card shadow-lg flex items-center justify-center text-3xl lg:text-4xl">?</div></div><div id="alloha-power-panel" class="glass-card rounded-xl px-3 py-4 text-center"><h2 class="text-sm font-semibold uppercase tracking-wider mb-3 flex items-center justify-center gap-2" style="color: #4A5568;"><span style="font-size: 16px;">ðŸª„</span>ALLOHA Powers</h2><div class="grid grid-cols-3 gap-2 text-xs"><button id="past-lives-btn" class="superpower-btn"><div>Past</div><div>Lives</div></button><button id="bomb-bae-btn" class="superpower-btn"><div>Bomb</div><div>Bae</div></button><button id="no-return-btn" class="superpower-btn"><div>No</div><div>Return</div></button></div></div>`;
                 wrapper.querySelector('#roll-dice-btn').onclick = this.handleRollDice.bind(this);
                 this.DOMElements['controls-area'].appendChild(wrapper);
                 this.updateControlsState();
