@@ -73,7 +73,7 @@
             font-family: 'Inter', sans-serif;
             background: var(--bg);
             color: var(--text);
-            overflow: hidden; /* Prevent scrollbars from ambient bubbles */
+            overflow-x: hidden; /* Prevent horizontal scroll */
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
@@ -107,25 +107,12 @@
             }
         }
 
-        /* Loading states */
-        .skeleton-shimmer {
-            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-        }
-
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-        }
-
         .rounded-card {
             border-radius: 16px;
             background: var(--card);
             box-shadow: var(--shadow-soft);
         }
 
-        /* Enhanced button micro-interactions */
         .themed-button {
             font-weight: 600;
             border-radius: 16px;
@@ -138,45 +125,17 @@
             overflow: hidden;
             transform-origin: center;
         }
-
-        .themed-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: var(--shimmer-gradient);
-            transition: left 0.6s var(--ease-smooth);
-            z-index: 1;
-        }
-
-        .themed-button:hover::before {
-            left: 100%;
-        }
-
+        
         .themed-button:active {
             transform: scale(0.98);
             transition-duration: 0.1s;
         }
-
+        
         .themed-button:hover {
             transform: translateY(-2px) scale(1.02);
             box-shadow: var(--shadow-medium);
         }
 
-        /* Shimmer effect for special buttons */
-        .themed-button.shimmer-active::before {
-            animation: shimmer-sweep 2s infinite;
-        }
-
-        @keyframes shimmer-sweep {
-            0% { left: -100%; }
-            50% { left: 100%; }
-            100% { left: 100%; }
-        }
-
-        /* Enhanced glassmorphism */
         .glass-card {
             background: linear-gradient(135deg, var(--glass-secondary) 0%, rgba(255,255,255,0.1) 100%);
             backdrop-filter: blur(20px) saturate(180%);
@@ -190,25 +149,6 @@
             overflow: hidden;
         }
 
-        /* Score card hover effects */
-        .glass-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
-            opacity: 0;
-            transition: opacity 0.3s var(--ease-smooth);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .glass-card:hover::before {
-            opacity: 1;
-        }
-
         .glass-card:hover {
             transform: translateY(-1px);
             box-shadow: var(--shadow-medium), 
@@ -216,7 +156,6 @@
                         inset 0 1px 0 rgba(255, 255, 255, 0.4);
         }
 
-        /* Ensure content stays above the shine effect */
         .glass-card > * {
             position: relative;
             z-index: 1;
@@ -246,23 +185,7 @@
             position: relative;
             overflow: hidden;
         }
-
-        .grid-cell::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, transparent 50%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .grid-cell:hover::before {
-            opacity: 1;
-        }
-
+        
         .grid-cell:hover {
             background: rgba(178, 235, 242, 0.8);
             transform: translateY(-2px);
@@ -277,7 +200,6 @@
             -webkit-backdrop-filter: blur(25px);
         }
 
-        /* Enhanced progress bar */
         .progress-bar-container {
             position: relative;
             overflow: hidden;
@@ -290,22 +212,6 @@
             position: relative;
             overflow: hidden;
             transition: width 0.3s var(--ease-smooth);
-        }
-
-        .progress-bar-fill::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: var(--progress-shimmer);
-            animation: progress-shimmer 2s infinite;
-        }
-
-        @keyframes progress-shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
         }
 
         @keyframes pop-in {
@@ -365,52 +271,16 @@
             cursor: crosshair !important;
         }
 
-        .modal {
-            transition: all 0.3s var(--ease-smooth);
-        }
-
-        .modal-content {
-            transition: all 0.3s var(--ease-smooth);
-        }
-
-        .modal.is-open {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .modal.is-open .modal-content {
-            transform: scale(1) translateY(0);
-        }
+        .modal { transition: all 0.3s var(--ease-smooth); }
+        .modal-content { transition: all 0.3s var(--ease-smooth); }
+        .modal.is-open { opacity: 1; visibility: visible; }
+        .modal.is-open .modal-content { transform: scale(1) translateY(0); }
 
         .controls-area {
             min-height: 165px;
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        .symbol-selector-btn {
-            position: relative;
-            overflow: hidden;
-            transition: all 0.2s var(--ease-smooth);
-        }
-
-        .symbol-selector-btn::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: rgba(255, 255, 255, 0.5);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            transition: width 0.3s ease, height 0.3s ease;
-        }
-
-        .symbol-selector-btn:hover::after {
-            width: 100%;
-            height: 100%;
         }
 
         @keyframes score-update {
@@ -463,6 +333,37 @@
             width: 100%;
             height: 100%;
         }
+
+        /* --- NEW: Mobile Touch Interaction Styles --- */
+        .valid-move-highlight {
+            background-color: rgba(32, 178, 170, 0.3) !important;
+            box-shadow: 0 0 0 3px rgba(32, 178, 170, 0.5);
+            animation: pulse-highlight 1.5s infinite;
+            cursor: pointer;
+        }
+
+        @keyframes pulse-highlight {
+            0% { box-shadow: 0 0 0 0 rgba(32, 178, 170, 0.5); }
+            70% { box-shadow: 0 0 0 10px rgba(32, 178, 170, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(32, 178, 170, 0); }
+        }
+
+        /* --- NEW: Mobile Responsive Styles --- */
+        @media (max-width: 1023px) {
+            body {
+                padding: 0.5rem;
+            }
+            main#game-container {
+                padding-top: 1rem;
+            }
+            #game-board-container {
+                padding: 0.5rem;
+            }
+            #game-board, #row-scores-display, #col-scores-display {
+                gap: 0.5rem;
+            }
+        }
+
     </style>
 </head>
 <body class="p-2 lg:p-4">
@@ -480,88 +381,7 @@
                     
                     <div class="hidden lg:flex items-center justify-center">
                         <div class="alloha-logo">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 396.75 396.749985" preserveAspectRatio="xMidYMid meet" version="1.0">
-                                <defs>
-                                    <clipPath id="864cd2432c"><path d="M 40 0 L 355 0 L 355 396.5 L 40 396.5 Z M 40 0 " clip-rule="nonzero"/></clipPath>
-                                    <clipPath id="9e91a8b430"><rect x="0" width="169" y="0" height="269"/></clipPath>
-                                    <clipPath id="9a4060e8fa"><path d="M 146 116 L 314.976562 116 L 314.976562 396.5 L 146 396.5 Z M 146 116 " clip-rule="nonzero"/></clipPath>
-                                    <clipPath id="f5a1301079"><rect x="0" width="169" y="0" height="281"/></clipPath>
-                                    <clipPath id="45fb35c46f"><rect x="0" width="166" y="0" height="269"/></clipPath>
-                                    <clipPath id="cd05768fb1"><path d="M 0.292969 116 L 171 116 L 171 396.5 L 0.292969 396.5 Z M 0.292969 116 " clip-rule="nonzero"/></clipPath>
-                                    <clipPath id="f5e8ebd13e"><rect x="0" width="171" y="0" height="281"/></clipPath>
-                                    <clipPath id="22bb000506"><path d="M 242.375 20.429688 L 285.164062 20.429688 L 285.164062 140.25 L 242.375 140.25 Z M 242.375 20.429688 " clip-rule="nonzero"/></clipPath>
-                                    <clipPath id="cb13c63ddb"><path d="M 0.375 0.429688 L 43.164062 0.429688 L 43.164062 120.25 L 0.375 120.25 Z M 0.375 0.429688 " clip-rule="nonzero"/></clipPath>
-                                    <clipPath id="7703948ec8"><rect x="0" width="44" y="0" height="121"/></clipPath>
-                                    <clipPath id="0f7bc66451"><path d="M 213.839844 20.4375 L 276.609375 20.4375 L 276.609375 63.222656 L 213.839844 63.222656 Z M 213.839844 20.4375 " clip-rule="nonzero"/></clipPath>
-                                    <clipPath id="90aa4af11e"><path d="M 0.839844 0.4375 L 63.609375 0.4375 L 63.609375 43.222656 L 0.839844 43.222656 Z M 0.839844 0.4375 " clip-rule="nonzero"/></clipPath>
-                                    <clipPath id="75d75e67e1"><rect x="0" width="64" y="0" height="44"/></clipPath>
-                                    <clipPath id="e5df82bf12"><rect x="0" width="315" y="0" height="397"/></clipPath>
-                                </defs>
-                                <g clip-path="url(#864cd2432c)">
-                                    <g transform="matrix(1, 0, 0, 1, 40, 0)">
-                                        <g clip-path="url(#e5df82bf12)">
-                                            <g transform="matrix(1, 0, 0, 1, 1, 0)">
-                                                <g clip-path="url(#9e91a8b430)">
-                                                    <g fill="#20B2AA" fill-opacity="1">
-                                                        <g transform="translate(0.873977, 194.870819)">
-                                                            <g><path d="M 137.910156 0 L 137.910156 -174.546875 L 6.804688 -174.546875 L 6.804688 0 L 50.503906 0 L 50.503906 -48.675781 L 94.207031 -48.675781 L 94.207031 0 Z M 94.207031 -88.449219 L 50.503906 -88.449219 L 50.503906 -134.507812 L 94.207031 -134.507812 Z M 94.207031 -88.449219 "/></g>
-                                                        </g>
-                                                    </g>
-                                                </g>
-                                            </g>
-                                            <g clip-path="url(#9a4060e8fa)">
-                                                <g transform="matrix(1, 0, 0, 1, 146, 116)">
-                                                    <g clip-path="url(#f5a1301079)">
-                                                        <g fill="#20B2AA" fill-opacity="1">
-                                                            <g transform="translate(1.206642, 267.950498)">
-                                                                <g><path d="M 137.910156 0 L 137.910156 -174.546875 L 6.804688 -174.546875 L 6.804688 0 Z M 94.207031 -39.777344 L 50.503906 -39.777344 L 50.503906 -134.507812 L 94.207031 -134.507812 Z M 94.207031 -39.777344 "/></g>
-                                                            </g>
-                                                        </g>
-                                                    </g>
-                                                </g>
-                                            </g>
-                                            <g transform="matrix(1, 0, 0, 1, 148, 0)">
-                                                <g clip-path="url(#45fb35c46f)">
-                                                    <g fill="#20B2AA" fill-opacity="1">
-                                                        <g transform="translate(0.26582, 194.870819)">
-                                                            <g><path d="M 137.386719 0 L 137.386719 -39.777344 L 50.503906 -39.777344 L 50.503906 -174.546875 L 6.804688 -174.546875 L 6.804688 0 Z M 137.386719 0 "/></g>
-                                                        </g>
-                                                    </g>
-                                                </g>
-                                            </g>
-                                            <g clip-path="url(#cd05768fb1)">
-                                                <g transform="matrix(1, 0, 0, 1, -0.000000000000007105, 116)">
-                                                    <g clip-path="url(#f5e8ebd13e)">
-                                                        <g fill="#20B2AA" fill-opacity="1">
-                                                            <g transform="translate(1.876102, 267.950498)">
-                                                                <g><path d="M 137.910156 0 L 137.910156 -174.546875 L 94.207031 -174.546875 L 94.207031 -107.03125 L 50.503906 -107.03125 L 50.503906 -174.546875 L 6.804688 -174.546875 L 6.804688 0 L 50.503906 0 L 50.503906 -68.5625 L 94.207031 -68.5625 L 94.207031 0 Z M 137.910156 0 "/></g>
-                                                            </g>
-                                                        </g>
-                                                    </g>
-                                                </g>
-                                            </g>
-                                            <g clip-path="url(#22bb000506)">
-                                                <g transform="matrix(1, 0, 0, 1, 242, 20)">
-                                                    <g clip-path="url(#7703948ec8)">
-                                                        <g clip-path="url(#cb13c63ddb)">
-                                                            <path fill="#20B2AA" d="M 43.164062 120.25 L 0.375 120.25 L 0.375 0.414062 L 43.164062 0.414062 Z M 43.164062 120.25 " fill-opacity="1" fill-rule="nonzero"/>
-                                                        </g>
-                                                    </g>
-                                                </g>
-                                            </g>
-                                            <g clip-path="url(#0f7bc66451)">
-                                                <g transform="matrix(1, 0, 0, 1, 213, 20)">
-                                                    <g clip-path="url(#75d75e67e1)">
-                                                        <g clip-path="url(#90aa4af11e)">
-                                                            <path fill="#20B2AA" d="M 0.839844 43.222656 L 0.839844 0.4375 L 63.683594 0.4375 L 63.683594 43.222656 Z M 0.839844 43.222656 " fill-opacity="1" fill-rule="nonzero"/>
-                                                        </g>
-                                                    </g>
-                                                </g>
-                                            </g>
-                                        </g>
-                                    </g>
-                                </g>
-                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 396.75 396.749985" preserveAspectRatio="xMidYMid meet" version="1.0"><defs><clipPath id="864cd2432c"><path d="M 40 0 L 355 0 L 355 396.5 L 40 396.5 Z M 40 0 " clip-rule="nonzero"/></clipPath><clipPath id="9e91a8b430"><rect x="0" width="169" y="0" height="269"/></clipPath><clipPath id="9a4060e8fa"><path d="M 146 116 L 314.976562 116 L 314.976562 396.5 L 146 396.5 Z M 146 116 " clip-rule="nonzero"/></clipPath><clipPath id="f5a1301079"><rect x="0" width="169" y="0" height="281"/></clipPath><clipPath id="45fb35c46f"><rect x="0" width="166" y="0" height="269"/></clipPath><clipPath id="cd05768fb1"><path d="M 0.292969 116 L 171 116 L 171 396.5 L 0.292969 396.5 Z M 0.292969 116 " clip-rule="nonzero"/></clipPath><clipPath id="f5e8ebd13e"><rect x="0" width="171" y="0" height="281"/></clipPath><clipPath id="22bb000506"><path d="M 242.375 20.429688 L 285.164062 20.429688 L 285.164062 140.25 L 242.375 140.25 Z M 242.375 20.429688 " clip-rule="nonzero"/></clipPath><clipPath id="cb13c63ddb"><path d="M 0.375 0.429688 L 43.164062 0.429688 L 43.164062 120.25 L 0.375 120.25 Z M 0.375 0.429688 " clip-rule="nonzero"/></clipPath><clipPath id="7703948ec8"><rect x="0" width="44" y="0" height="121"/></clipPath><clipPath id="0f7bc66451"><path d="M 213.839844 20.4375 L 276.609375 20.4375 L 276.609375 63.222656 L 213.839844 63.222656 Z M 213.839844 20.4375 " clip-rule="nonzero"/></clipPath><clipPath id="90aa4af11e"><path d="M 0.839844 0.4375 L 63.609375 0.4375 L 63.609375 43.222656 L 0.839844 43.222656 Z M 0.839844 0.4375 " clip-rule="nonzero"/></clipPath><clipPath id="75d75e67e1"><rect x="0" width="64" y="0" height="44"/></clipPath><clipPath id="e5df82bf12"><rect x="0" width="315" y="0" height="397"/></clipPath></defs><g clip-path="url(#864cd2432c)"><g transform="matrix(1, 0, 0, 1, 40, 0)"><g clip-path="url(#e5df82bf12)"><g transform="matrix(1, 0, 0, 1, 1, 0)"><g clip-path="url(#9e91a8b430)"><g fill="#20B2AA" fill-opacity="1"><g transform="translate(0.873977, 194.870819)"><g><path d="M 137.910156 0 L 137.910156 -174.546875 L 6.804688 -174.546875 L 6.804688 0 L 50.503906 0 L 50.503906 -48.675781 L 94.207031 -48.675781 L 94.207031 0 Z M 94.207031 -88.449219 L 50.503906 -88.449219 L 50.503906 -134.507812 L 94.207031 -134.507812 Z M 94.207031 -88.449219 "/></g></g></g></g></g><g clip-path="url(#9a4060e8fa)"><g transform="matrix(1, 0, 0, 1, 146, 116)"><g clip-path="url(#f5a1301079)"><g fill="#20B2AA" fill-opacity="1"><g transform="translate(1.206642, 267.950498)"><g><path d="M 137.910156 0 L 137.910156 -174.546875 L 6.804688 -174.546875 L 6.804688 0 Z M 94.207031 -39.777344 L 50.503906 -39.777344 L 50.503906 -134.507812 L 94.207031 -134.507812 Z M 94.207031 -39.777344 "/></g></g></g></g></g></g><g transform="matrix(1, 0, 0, 1, 148, 0)"><g clip-path="url(#45fb35c46f)"><g fill="#20B2AA" fill-opacity="1"><g transform="translate(0.26582, 194.870819)"><g><path d="M 137.386719 0 L 137.386719 -39.777344 L 50.503906 -39.777344 L 50.503906 -174.546875 L 6.804688 -174.546875 L 6.804688 0 Z M 137.386719 0 "/></g></g></g></g></g><g clip-path="url(#cd05768fb1)"><g transform="matrix(1, 0, 0, 1, -0.000000000000007105, 116)"><g clip-path="url(#f5e8ebd13e)"><g fill="#20B2AA" fill-opacity="1"><g transform="translate(1.876102, 267.950498)"><g><path d="M 137.910156 0 L 137.910156 -174.546875 L 94.207031 -174.546875 L 94.207031 -107.03125 L 50.503906 -107.03125 L 50.503906 -174.546875 L 6.804688 -174.546875 L 6.804688 0 L 50.503906 0 L 50.503906 -68.5625 L 94.207031 -68.5625 L 94.207031 0 Z M 137.910156 0 "/></g></g></g></g></g></g><g clip-path="url(#22bb000506)"><g transform="matrix(1, 0, 0, 1, 242, 20)"><g clip-path="url(#7703948ec8)"><g clip-path="url(#cb13c63ddb)"><path fill="#20B2AA" d="M 43.164062 120.25 L 0.375 120.25 L 0.375 0.414062 L 43.164062 0.414062 Z M 43.164062 120.25 " fill-opacity="1" fill-rule="nonzero"/></g></g></g></g><g clip-path="url(#0f7bc66451)"><g transform="matrix(1, 0, 0, 1, 213, 20)"><g clip-path="url(#75d75e67e1)"><g clip-path="url(#90aa4af11e)"><path fill="#20B2AA" d="M 0.839844 43.222656 L 0.839844 0.4375 L 63.683594 0.4375 L 63.683594 43.222656 Z M 0.839844 43.222656 " fill-opacity="1" fill-rule="nonzero"/></g></g></g></g></g></g></g></svg>
                         </div>
                     </div>
                 </div>
@@ -571,7 +391,7 @@
         <div class="w-full lg:w-1/3">
             <div id="scoring-panel" class="flex-1 flex flex-col gap-3 lg:gap-4 p-4 lg:p-6 glass-card rounded-2xl justify-between">
                 <div class="flex justify-center items-center gap-3">
-                    <button id="rules-btn" class="flex-1 py-2 px-4 themed-button text-sm font-semibold" style="color: var(--accent); background: var(--accent-light);">No Rules</button>
+                    <button id="rules-btn" class="flex-1 py-2 px-4 themed-button text-sm font-semibold" style="color: var(--accent); background: var(--accent-light);">How to Play</button>
                     <button id="new-game-btn" class="flex-1 py-2 px-4 themed-button text-white font-semibold rounded-xl text-sm" style="background: var(--accent-gradient);">New Game</button>
                 </div>
 
@@ -613,23 +433,72 @@
                 <button id="close-rules-btn" class="w-10 h-10 rounded-full text-xl flex items-center justify-center font-bold">×</button>
             </div>
             <div class="space-y-4 text-gray-700 text-sm max-h-[70vh] overflow-y-auto pr-2">
-                 <h3 class="font-bold text-lg" style="color: var(--accent);">The Objective</h3>
-                 <p>Get the highest score by placing Allohas on the grid to create sequences of 3 or more identical Allohas in a line (rows or columns).</p>
-                 <h3 class="font-bold text-lg" style="color: var(--accent);">Gameplay</h3>
-                 <ol class="list-decimal list-inside space-y-1"><li>Choose your starting Alloha.</li><li>Click "Roll Dice" to get two new Allohas.</li><li>Place both Allohas in any two empty, adjacent (not diagonal) squares.</li></ol>
-                 <h3 class="font-bold text-lg" style="color: var(--accent);">ALLOHA Powers</h3>
-                 <p>Use one of three powerful, single-use abilities per game.</p>
-                 <ul class="list-disc list-inside space-y-1"><li><b>Past Lives:</b> Undoes your last completed move.</li><li><b>Bomb Bae:</b> Click to activate, then click a stuck block (💣) to fill it with a random Alloha.</li><li><b>No Return:</b> Click to activate, then click any Alloha on the grid to swap it.</li></ul>
-                 <h3 class="font-bold text-lg" style="color: var(--accent);">Special Blocks</h3>
-                 <ul class="list-disc list-inside space-y-1">
-                    <li><b>Wild Card (💎):</b> A rare treasure! This special piece acts as any Alloha and can complete any line. Appears once per game.</li>
-                    <li><b>Cursed Block (☠️):</b> An immovable obstacle! This block cannot be removed by Bomb Bae or swapped with No Return. Appears once per game.</li>
-                 </ul>
-                 <h3 class="font-bold text-lg" style="color: var(--accent);">Scoring</h3>
-                 <ul class="list-disc list-inside space-y-1"><li><b>3 in a line:</b> 3 points</li><li><b>4 in a line:</b> 8 points</li><li><b>5 in a line:</b> 10 points</li><li><b>6 in a line:</b> 14 points</li><li><b>7 in a line:</b> 20 points</li>
-                 <li><b>Twinning Bonus:</b> Scores on the 4th row or 4th column are doubled!</li>
-                 <li><b>Grid Bonus:</b> 2x2, 3x3, etc. grids of the same Alloha give bonus points (size * size).</li>
-                 <li><b>Penalty:</b> A row or column that can no longer form a 3-symbol sequence gets a -5 penalty. A "dead" line on the twinning gets a -10 penalty.</li></ul>
+                <h3 class="font-bold text-lg" style="color: var(--accent);">The Objective</h3>
+                <p>Get the highest score by placing Allohas on the grid to create sequences of 3 or more identical Allohas in a line (rows or columns).</p>
+                
+                <h3 class="font-bold text-lg" style="color: var(--accent);">Gameplay</h3>
+                <ul class="list-disc list-inside space-y-1">
+                    <li>Choose your starting Alloha to place in the top-left corner.</li>
+                    <li>Click "Roll Dice" to get two new Allohas.</li>
+                    <li>Place both Allohas in any two empty, adjacent (not diagonal) squares.</li>
+                    <li>Continue for up to 24 turns until the grid fills or no valid moves remain.</li>
+                </ul>
+
+                <h3 class="font-bold text-lg" style="color: var(--accent);">Game End</h3>
+                <p>The game ends when:</p>
+                <ul class="list-disc list-inside space-y-1">
+                    <li>All 24 turns are completed (grid nearly full).</li>
+                    <li>No valid adjacent empty squares remain for placement.</li>
+                </ul>
+
+                <h3 class="font-bold text-lg" style="color: var(--accent);">ALLOHA Powers</h3>
+                <p>Use one of three powerful, single-use abilities per game:</p>
+                <ul class="list-disc list-inside space-y-1">
+                    <li><b>Past Lives:</b> Undoes your last completed move.</li>
+                    <li><b>Bomb Bae:</b> Click to activate, then click a stuck block (💣) to fill it with a random Alloha.</li>
+                    <li><b>No Return:</b> Click to activate, then click any Alloha on the grid to swap it for a different one.</li>
+                </ul>
+
+                <h3 class="font-bold text-lg" style="color: var(--accent);">Special Blocks</h3>
+                <ul class="list-disc list-inside space-y-1">
+                    <li><b>Wild Card (💎):</b> Appears once between turns 15-22. Acts as any Alloha and can complete any sequence.</li>
+                    <li><b>Cursed Block (☠️):</b> Appears once between turns 5-12. An immovable obstacle that cannot be removed by Bomb Bae or swapped with No Return.</li>
+                </ul>
+
+                <h3 class="font-bold text-lg" style="color: var(--accent);">Scoring System</h3>
+                <h4 class="font-semibold text-gray-800">Line Scoring:</h4>
+                <ul class="list-disc list-inside space-y-1">
+                    <li><b>3 in a line:</b> 3 points</li>
+                    <li><b>4 in a line:</b> 8 points</li>
+                    <li><b>5 in a line:</b> 10 points</li>
+                    <li><b>6 in a line:</b> 14 points</li>
+                    <li><b>7 in a line:</b> 20 points</li>
+                </ul>
+
+                <h4 class="font-semibold text-gray-800 mt-2">Bonus Scoring:</h4>
+                <ul class="list-disc list-inside space-y-1">
+                    <li><b>Highlighted Area Bonus:</b> Scores on the highlighted area in the game board (the center 4th row or 4th column) are doubled.</li>
+                    <li>
+                        <p class="font-bold">Grid Bonus: The Power of Squares</p>
+                        <p class="mt-1">You earn bonus points for forming solid square grids (2x2, 3x3, etc.) of the same Alloha. The score is the size of the grid squared (a 2x2 grid earns 4 points, a 3x3 grid earns 9, and so on).</p>
+                        <p class="mt-1"><b>The Wild Card's Role:</b> The Wild Card (💎) is extremely valuable for creating grids. It can substitute for <b>any</b> Alloha to complete a square. For example, this arrangement counts as a 2x2 grid of Shells and earns 4 bonus points:</p>
+                        <div class="my-2 p-2 rounded-md bg-gray-100 text-center font-mono text-lg">
+                            <div>🐚 💎</div>
+                            <div>🐚 🐚</div>
+                        </div>
+                        <p class="mt-1"><b>Overlapping Grids:</b> The game rewards complex patterns! A large grid can also contain smaller scoring grids within it. For example, a perfect 3x3 grid will not only earn 9 points for itself, but also points for the four 2x2 grids it contains, leading to a massive score boost!</p>
+                    </li>
+                </ul>
+
+                <h4 class="font-semibold text-gray-800 mt-2">Penalties:</h4>
+                <ul class="list-disc list-inside space-y-1">
+                    <li><b>Bomb Squad Charge:</b> Empty squares with no adjacent empty squares become stuck blocks (💣), each giving a -1 penalty.</li>
+                    <li><b>Dead Lines:</b> A row or column that can no longer form a 3-symbol sequence gets a -5 penalty.</li>
+                    <li><b>Dead Highlighted Area:</b> A dead line on the highlighted center row or column gets a -10 penalty instead.</li>
+                </ul>
+
+                <h3 class="font-bold text-lg" style="color: var(--accent);">Strategy Tip</h3>
+                <p>Focus on the center row and column early—their doubled scoring can dramatically boost your final score!</p>
             </div>
         </div>
     </div>
@@ -664,7 +533,6 @@
     <script>
         // =================================================================================
         // GAME CONSTANTS
-        // All "magic numbers" and game rules are defined here for easy tuning.
         // =================================================================================
         const GRID_SIZE = 7;
         const MAX_TURNS = 24;
@@ -695,12 +563,8 @@
                 this.highScore = 0;
                 this.gridCells = [];
                 this.audio = { unlocked: false, context: null, sounds: new Map() };
-
-                // Centralized state object for the current game session
                 this.state = {};
-
                 this.DOMElements = this.getDOMElements();
-
                 this.init();
                 this.createAmbientBubbles();
                 this.setupEventListeners();
@@ -725,8 +589,6 @@
 
             init() {
                 this.gameStateManager.setState('PRE_GAME');
-                
-                // Initialize the state object for a new game
                 this.state = {
                     gridData: Array(GRID_SIZE).fill(null).map(() => Array(GRID_SIZE).fill(null)),
                     currentRoll: [],
@@ -735,14 +597,13 @@
                     stuckBlocks: new Set(),
                     hasSuperpowerBeenUsed: false,
                     activeSuperpower: null,
-                    lastGameState: null, // For undo functionality
+                    lastGameState: null,
                     cellToExchange: null,
                     currentTotalScore: 0,
                     cursedBlockTurn: Math.floor(Math.random() * CURSED_BLOCK_TURN_RANGE) + CURSED_BLOCK_MIN_TURN,
                     wildcardTurn: Math.floor(Math.random() * WILD_CARD_TURN_RANGE) + WILD_CARD_MIN_TURN,
+                    highlightedCells: new Set(),
                 };
-                
-                // Ensure cursed and wild turns are not the same
                 if (this.state.wildcardTurn === this.state.cursedBlockTurn) this.state.wildcardTurn++;
 
                 this.highScore = parseInt(localStorage.getItem('allohaHighScore')) || 0;
@@ -751,12 +612,12 @@
                 this.DOMElements['high-score'].textContent = this.highScore;
                 ['game-over-modal', 'exchange-modal', 'rules-modal'].forEach(id => this.DOMElements[id].classList.remove('is-open'));
                 this.DOMElements['empty-block-penalty'].textContent = '0';
+                this.clearValidMoveHighlights();
                 this.renderGrid(); this.renderScorePlaceholders(); this.renderControls(); this.updateAllScores();
                 this.updateProgressBar();
                 this.syncPanelHeights();
             }
 
-            // Audio System
             audioInit() { this.audioCreateContext(); this.audioCreateSounds(); }
             audioCreateContext() { try { this.audio.context = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} }
             audioCreateSounds() { if (!this.audio.context) return; const s = { 'pop': [1200,.1,.05], 'roll': [220,.2,.2], 'hover': [660,.05,.1], 'invalid': [150,.3,.2], 'power-activate': [880,.15,.2], 'power-use': [1047,.2,.3], 'combo-3': [[523,659],.15], 'combo-4': [[523,659,784],.2], 'combo-5': [[523,659,784,880],.25], 'chime': [1047, .15, .2], 'thud': [100, .3, .1] }; for (const k in s) { if (Array.isArray(s[k][0])) this.audio.sounds.set(k, ()=>this.audioPlaySequence(...s[k])); else this.audio.sounds.set(k, ()=>this.audioPlayTone(...s[k])); } }
@@ -779,23 +640,6 @@
                     bubble.style.animationDuration = Math.random() * 8 + 7 + 's';
                     bubble.style.animationDelay = Math.random() * 5 + 's';
                     bubbleContainer.appendChild(bubble);
-                }
-            }
-            
-            triggerScoreBubbles(count) {
-                const effectsContainer = this.DOMElements['effects-container'];
-                if (!effectsContainer) return;
-                for(let i = 0; i < count; i++) {
-                    const bubble = document.createElement('span');
-                    bubble.className = 'bubble';
-                    const size = Math.random() * 25 + 10 + 'px';
-                    bubble.style.width = size;
-                    bubble.style.height = size;
-                    bubble.style.left = Math.random() * 100 + '%';
-                    const duration = Math.random() * 4 + 2;
-                    bubble.style.animationDuration = duration + 's';
-                    effectsContainer.appendChild(bubble);
-                    setTimeout(() => bubble.remove(), duration * 1000);
                 }
             }
             
@@ -832,9 +676,7 @@
                 }
                 
                 if (totalScore === 0) {
-                    if (this.isLineDead(line, type, lineIndex)) {
-                        return { score: LINE_DEATH_PENALTY };
-                    }
+                    if (this.isLineDead(line, type, lineIndex)) { return { score: LINE_DEATH_PENALTY }; }
                 }
                 
                 return { score: totalScore };
@@ -879,7 +721,6 @@
                         for (let c = 0; c <= GRID_SIZE - size; c++) {
                             const firstSymbol = gridData[r][c];
                             if (!firstSymbol || firstSymbol === SPECIAL_SYMBOLS.CURSED) continue;
-
                             let targetSymbol = firstSymbol;
                             if (targetSymbol === SPECIAL_SYMBOLS.WILD) {
                                 let foundSymbol = false;
@@ -895,13 +736,11 @@
                                     if (foundSymbol) break;
                                 }
                             }
-
                             let isGrid = true;
                             for (let i = r; i < r + size; i++) {
                                 for (let j = c; j < c + size; j++) {
                                     const currentSymbol = gridData[i][j];
                                     if (!currentSymbol || currentSymbol === SPECIAL_SYMBOLS.CURSED) { isGrid = false; break; }
-                                    
                                     if (targetSymbol === SPECIAL_SYMBOLS.WILD) {
                                         if (currentSymbol !== SPECIAL_SYMBOLS.WILD) { isGrid = false; break; }
                                     } else {
@@ -910,10 +749,7 @@
                                 }
                                 if (!isGrid) break;
                             }
-
-                            if (isGrid) {
-                                points += size * size;
-                            }
+                            if (isGrid) { points += size * size; }
                         }
                     }
                 }
@@ -1016,24 +852,94 @@
                 }, 600);
             }
 
+            // --- MODIFIED: Main click handler for new touch logic ---
             handleCellClick(e) {
                 const cell = e.target.closest('[data-row]'); if (!cell) return;
                 const r = parseInt(cell.dataset.row), c = parseInt(cell.dataset.col);
+
                 if (this.state.activeSuperpower) { this.handleSuperpowerCellClick(r, c, cell); return; }
                 if (!this.gameStateManager.is('AWAITING_PLACEMENT')) return;
-                if (this.state.firstPlacementCell) { this.handleSecondPlacement(r, c, cell); } else { this.handleFirstPlacement(r, c); }
+
+                if (this.state.firstPlacementCell) {
+                    this.handleSecondPlacement(r, c, cell);
+                } else {
+                    this.handleFirstPlacement(r, c);
+                }
+            }
+            
+            // --- NEW/MODIFIED: Placement logic with highlighting ---
+            handleFirstPlacement(r, c) {
+                if (this.state.gridData[r][c]) return; // Cell is not empty
+
+                this.state.gridData[r][c] = this.state.currentRoll[0];
+                this.state.firstPlacementCell = { r, c };
+                this.updateGridCell(r, c);
+                this.updateSuperpowerButtonsUI();
+                this.highlightValidMoves(r, c);
             }
 
-            handleFirstPlacement(r, c) { if (!this.state.gridData[r][c]) { this.state.gridData[r][c] = this.state.currentRoll[0]; this.state.firstPlacementCell = { r, c }; this.updateGridCell(r, c); this.updateSuperpowerButtonsUI(); } }
             handleSecondPlacement(r, c, cell) {
                 const { r: pR, c: pC } = this.state.firstPlacementCell;
-                if (pR === r && pC === c) { this.state.gridData[r][c] = null; this.state.firstPlacementCell = null; this.updateGridCell(r, c); this.updateSuperpowerButtonsUI(); return; }
-                if ((Math.abs(pR - r) + Math.abs(pC - c) === 1) && !this.state.gridData[r][c]) { this.completeMove(r, c); } 
-                else { cell.classList.add('shake-animation'); setTimeout(() => cell.classList.remove('shake-animation'), 400); this.audioPlay('invalid'); }
+
+                // Case 1: Tapping the first cell again to cancel
+                if (pR === r && pC === c) {
+                    this.state.gridData[r][c] = null;
+                    this.state.firstPlacementCell = null;
+                    this.updateGridCell(r, c);
+                    this.updateSuperpowerButtonsUI();
+                    this.clearValidMoveHighlights();
+                    return;
+                }
+
+                // Case 2: Tapping a valid, highlighted cell
+                if (this.state.highlightedCells.has(`${r},${c}`)) {
+                    this.completeMove(r, c);
+                } 
+                // Case 3: Tapping an invalid cell
+                else {
+                    cell.classList.add('shake-animation');
+                    setTimeout(() => cell.classList.remove('shake-animation'), 400);
+                    this.audioPlay('invalid');
+                }
             }
 
+            // --- NEW: Highlight Functions ---
+            highlightValidMoves(r, c) {
+                this.clearValidMoveHighlights();
+                const neighbors = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+                neighbors.forEach(([dr, dc]) => {
+                    const nr = r + dr;
+                    const nc = c + dc;
+                    if (nr >= 0 && nr < GRID_SIZE && nc >= 0 && nc < GRID_SIZE && !this.state.gridData[nr][nc]) {
+                        this.state.highlightedCells.add(`${nr},${nc}`);
+                        this.gridCells[nr]?.[nc]?.classList.add('valid-move-highlight');
+                    }
+                });
+            }
+
+            clearValidMoveHighlights() {
+                if (this.state.highlightedCells.size > 0) {
+                    this.state.highlightedCells.forEach(coord => {
+                        const [r, c] = coord.split(',').map(Number);
+                        this.gridCells[r]?.[c]?.classList.remove('valid-move-highlight');
+                    });
+                    this.state.highlightedCells.clear();
+                }
+            }
+
+
             saveStateForUndo() { this.state.lastGameState = { gridData: JSON.parse(JSON.stringify(this.state.gridData)), turnCount: this.state.turnCount, stuckBlocks: new Set(this.state.stuckBlocks), currentRoll: [...this.state.currentRoll] }; }
-            completeMove(r, c) { this.gameStateManager.setState('PROCESSING_TURN'); this.state.gridData[r][c] = this.state.currentRoll[1]; this.state.firstPlacementCell = null; this.state.turnCount++; this.updateGridCell(r, c); this.audioPlay('pop'); setTimeout(this.processTurnEnd.bind(this), 300); }
+            
+            completeMove(r, c) {
+                this.clearValidMoveHighlights(); // Clear highlights on successful move
+                this.gameStateManager.setState('PROCESSING_TURN');
+                this.state.gridData[r][c] = this.state.currentRoll[1];
+                this.state.firstPlacementCell = null;
+                this.state.turnCount++;
+                this.updateGridCell(r, c);
+                this.audioPlay('pop');
+                setTimeout(this.processTurnEnd.bind(this), 300);
+            }
             
             processTurnEnd() {
                 if (this.gameStateManager.is('GAME_OVER')) return;
@@ -1094,15 +1000,10 @@
             animateScoreUpdate(el, val) {
                 const startVal = parseInt(el.textContent) || 0;
                 if (startVal === val) return;
-
                 el.classList.add('score-update');
-                const duration = 500;
-                const stepTime = 20;
-                const totalSteps = duration / stepTime;
+                const duration = 500; const stepTime = 20; const totalSteps = duration / stepTime;
                 const increment = (val - startVal) / totalSteps;
-                let currentVal = startVal;
-                let step = 0;
-
+                let currentVal = startVal; let step = 0;
                 const timer = setInterval(() => {
                     step++;
                     if (step >= totalSteps) {
@@ -1169,12 +1070,27 @@
                 }
                 const bombBaeBtn = document.getElementById('bomb-bae-btn');
                 if (bombBaeBtn) {
-                    bombBaeBtn.addEventListener('click', () => { if (bombBaeBtn.disabled) return; this.state.activeSuperpower = 'bombBae'; this.gameStateManager.setState('SUPERPOWER_ACTIVE'); this.audioPlay('power-activate'); this.updateSuperpowerButtonsUI(); });
+                    bombBaeBtn.addEventListener('click', () => { if (bombBaeBtn.disabled) return; this.cancelPlacementAndActivateSuperpower('bombBae'); });
                 }
                 const noReturnBtn = document.getElementById('no-return-btn');
                 if (noReturnBtn) {
-                    noReturnBtn.addEventListener('click', () => { if (noReturnBtn.disabled) return; this.state.activeSuperpower = 'noReturn'; this.gameStateManager.setState('SUPERPOWER_ACTIVE'); this.audioPlay('power-activate'); this.updateSuperpowerButtonsUI(); });
+                    noReturnBtn.addEventListener('click', () => { if (noReturnBtn.disabled) return; this.cancelPlacementAndActivateSuperpower('noReturn'); });
                 }
+            }
+            
+            // --- NEW: Helper to cancel a move if a superpower is activated ---
+            cancelPlacementAndActivateSuperpower(superpowerName) {
+                if (this.state.firstPlacementCell) {
+                    const { r, c } = this.state.firstPlacementCell;
+                    this.state.gridData[r][c] = null;
+                    this.state.firstPlacementCell = null;
+                    this.updateGridCell(r, c);
+                    this.clearValidMoveHighlights();
+                }
+                this.state.activeSuperpower = superpowerName;
+                this.gameStateManager.setState('SUPERPOWER_ACTIVE');
+                this.audioPlay('power-activate');
+                this.updateSuperpowerButtonsUI();
             }
 
             setupEventListeners() {
