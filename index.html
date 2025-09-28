@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Pacifico&display=swap" rel="stylesheet">
+    
     <style>
         :root {
             /* Enhanced background with more depth */
@@ -43,7 +44,7 @@
             --shimmer-gradient: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%);
             --progress-shimmer: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.6) 50%, transparent 100%);
         }
-        
+
         /* Accessibility: Reduced motion support */
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after {
@@ -57,7 +58,7 @@
                 display: none;
             }
         }
-        
+
         /* Accessibility: High contrast mode */
         @media (prefers-contrast: high) {
             :root {
@@ -67,7 +68,7 @@
                 --glass-secondary: rgba(255, 255, 255, 0.3);
             }
         }
-        
+
         body {
             font-family: 'Inter', sans-serif;
             background: var(--bg);
@@ -105,7 +106,7 @@
                 opacity: 0;
             }
         }
-        
+
         /* Loading states */
         .skeleton-shimmer {
             background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
@@ -117,13 +118,13 @@
             0% { background-position: -200% 0; }
             100% { background-position: 200% 0; }
         }
-        
+
         .rounded-card {
             border-radius: 16px;
             background: var(--card);
             box-shadow: var(--shadow-soft);
         }
-        
+
         /* Enhanced button micro-interactions */
         .themed-button {
             font-weight: 600;
@@ -137,7 +138,7 @@
             overflow: hidden;
             transform-origin: center;
         }
-        
+
         .themed-button::before {
             content: '';
             position: absolute;
@@ -149,21 +150,21 @@
             transition: left 0.6s var(--ease-smooth);
             z-index: 1;
         }
-        
+
         .themed-button:hover::before {
             left: 100%;
         }
-        
+
         .themed-button:active {
             transform: scale(0.98);
             transition-duration: 0.1s;
         }
-        
+
         .themed-button:hover {
             transform: translateY(-2px) scale(1.02);
             box-shadow: var(--shadow-medium);
         }
-        
+
         /* Shimmer effect for special buttons */
         .themed-button.shimmer-active::before {
             animation: shimmer-sweep 2s infinite;
@@ -174,7 +175,7 @@
             50% { left: 100%; }
             100% { left: 100%; }
         }
-        
+
         /* Enhanced glassmorphism */
         .glass-card {
             background: linear-gradient(135deg, var(--glass-secondary) 0%, rgba(255,255,255,0.1) 100%);
@@ -188,7 +189,7 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         /* Score card hover effects */
         .glass-card::before {
             content: '';
@@ -203,24 +204,24 @@
             pointer-events: none;
             z-index: 0;
         }
-        
+
         .glass-card:hover::before {
             opacity: 1;
         }
-        
+
         .glass-card:hover {
             transform: translateY(-1px);
             box-shadow: var(--shadow-medium), 
                         0 0 0 1px rgba(255, 255, 255, 0.25),
                         inset 0 1px 0 rgba(255, 255, 255, 0.4);
         }
-        
+
         /* Ensure content stays above the shine effect */
         .glass-card > * {
             position: relative;
             z-index: 1;
         }
-        
+
         .glass-card-prominent {
             background: linear-gradient(135deg, var(--glass-primary) 0%, rgba(255,255,255,0.2) 100%);
             backdrop-filter: blur(25px) saturate(200%);
@@ -231,7 +232,7 @@
                         0 0 40px rgba(32, 178, 170, 0.1);
             border: none !important;
         }
-        
+
         .grid-cell {
             aspect-ratio: 1;
             border-radius: 8px;
@@ -245,7 +246,7 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .grid-cell::before {
             content: '';
             position: absolute;
@@ -257,17 +258,17 @@
             opacity: 0;
             transition: opacity 0.3s ease;
         }
-        
+
         .grid-cell:hover::before {
             opacity: 1;
         }
-        
+
         .grid-cell:hover {
             background: rgba(178, 235, 242, 0.8);
             transform: translateY(-2px);
             box-shadow: var(--shadow-soft);
         }
-        
+
         .themed-modal {
             border-radius: 20px;
             background: var(--card);
@@ -275,7 +276,7 @@
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
         }
-        
+
         /* Enhanced progress bar */
         .progress-bar-container {
             position: relative;
@@ -306,13 +307,13 @@
             0% { transform: translateX(-100%); }
             100% { transform: translateX(100%); }
         }
-        
+
         @keyframes pop-in {
             0% { opacity: 0; transform: scale(0.5) rotate(-180deg); }
             50% { opacity: 1; transform: scale(1.1) rotate(-90deg); }
             100% { opacity: 1; transform: scale(1) rotate(0deg); }
         }
-        
+
         .pop-in {
             animation: pop-in 0.4s var(--ease-bounce);
         }
@@ -326,7 +327,7 @@
         .shake-animation {
             animation: shake 0.4s ease-in-out;
         }
-        
+
         @keyframes dice-tumble {
             0%   { transform: rotate(0deg) scale(1); filter: blur(0px); }
             25%  { transform: rotate(-90deg) scale(1.05); }
@@ -334,25 +335,25 @@
             75%  { transform: rotate(-270deg) scale(1.05); }
             100% { transform: rotate(-360deg) scale(1); filter: blur(0px); }
         }
-        
+
         .dice-tumble {
             animation: dice-tumble 0.6s var(--ease-bounce);
         }
-        
+
         @keyframes pulse {
             0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(32, 178, 170, 0.4); }
             50% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(32, 178, 170, 0); }
             100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(32, 178, 170, 0); }
         }
-        
+
         #roll-dice-btn:not(:disabled) {
             animation: pulse 2s infinite;
         }
-        
+
         .cross-cell {
             background: var(--cross-highlight) !important;
         }
-        
+
         .stuck-cell {
             background: var(--stuck-block) !important;
             color: #1c3d52;
@@ -363,37 +364,37 @@
         .cursor-target {
             cursor: crosshair !important;
         }
-        
+
         .modal {
             transition: all 0.3s var(--ease-smooth);
         }
-        
+
         .modal-content {
             transition: all 0.3s var(--ease-smooth);
         }
-        
+
         .modal.is-open {
             opacity: 1;
             visibility: visible;
         }
-        
+
         .modal.is-open .modal-content {
             transform: scale(1) translateY(0);
         }
-        
+
         .controls-area {
             min-height: 165px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        
+
         .symbol-selector-btn {
             position: relative;
             overflow: hidden;
             transition: all 0.2s var(--ease-smooth);
         }
-        
+
         .symbol-selector-btn::after {
             content: '';
             position: absolute;
@@ -406,18 +407,18 @@
             transform: translate(-50%, -50%);
             transition: width 0.3s ease, height 0.3s ease;
         }
-        
+
         .symbol-selector-btn:hover::after {
             width: 100%;
             height: 100%;
         }
-        
+
         @keyframes score-update {
             0% { transform: scale(1); }
             50% { transform: scale(1.1); color: #5AC8FA; }
             100% { transform: scale(1); }
         }
-        
+
         .score-update {
             animation: score-update 0.5s var(--ease-quick);
         }
@@ -479,7 +480,7 @@
                     
                     <div class="hidden lg:flex items-center justify-center">
                         <div class="alloha-logo">
-                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 396.75 396.749985" preserveAspectRatio="xMidYMid meet" version="1.0">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 396.75 396.749985" preserveAspectRatio="xMidYMid meet" version="1.0">
                                 <defs>
                                     <clipPath id="864cd2432c"><path d="M 40 0 L 355 0 L 355 396.5 L 40 396.5 Z M 40 0 " clip-rule="nonzero"/></clipPath>
                                     <clipPath id="9e91a8b430"><rect x="0" width="169" y="0" height="269"/></clipPath>
@@ -661,27 +662,42 @@
     </div>
 
     <script>
+        // =================================================================================
+        // GAME CONSTANTS
+        // All "magic numbers" and game rules are defined here for easy tuning.
+        // =================================================================================
+        const GRID_SIZE = 7;
+        const MAX_TURNS = 24;
+        const MIN_SEQUENCE_LENGTH = 3;
+        const CROSS_AXIS_INDEX = 3; // 4th row/col is index 3
+        const LINE_DEATH_PENALTY = -5;
+        const CROSS_DEATH_PENALTY = -10;
+        const CURSED_BLOCK_MIN_TURN = 5;
+        const CURSED_BLOCK_TURN_RANGE = 8;
+        const WILD_CARD_MIN_TURN = 15;
+        const WILD_CARD_TURN_RANGE = 8;
+
+        const AQUA_SYMBOLS = { 'Shell': '🐚', 'Jellyfish': '🪼', 'Octopus': '🐙', 'Pufferfish': '🐡', 'Crab': '🦀', 'Whale': '🐋' };
+        const SPECIAL_SYMBOLS = { 'WILD': '💎', 'CURSED': '☠️' };
+        const SYMBOLS = Object.values(AQUA_SYMBOLS);
+        const SYMBOL_COLORS = { '🐚': 'text-[#D2B48C]', '🪼': 'text-[#87CEEB]', '🐙': 'text-[#9370DB]', '🐡': 'text-[#FFD700]', '🦀': 'text-[#DC143C]', '🐋': 'text-[#4169E1]', '💎': 'text-yellow-400' };
+        const SCORING_RULES = { 7: 20, 6: 14, 5: 10, 4: 8, 3: 3 };
+
         class GameState {
             constructor() { this.states = { PRE_GAME: 'PRE_GAME', AWAITING_ROLL: 'AWAITING_ROLL', ANIMATING_ROLL: 'ANIMATING_ROLL', AWAITING_PLACEMENT: 'AWAITING_PLACEMENT', SUPERPOWER_ACTIVE: 'SUPERPOWER_ACTIVE', PROCESSING_TURN: 'PROCESSING_TURN', GAME_OVER: 'GAME_OVER' }; this.currentState = this.states.PRE_GAME; this.validTransitions = { [this.states.PRE_GAME]: [this.states.AWAITING_ROLL], [this.states.AWAITING_ROLL]: [this.states.ANIMATING_ROLL, this.states.PRE_GAME, this.states.SUPERPOWER_ACTIVE, this.states.AWAITING_PLACEMENT], [this.states.ANIMATING_ROLL]: [this.states.AWAITING_PLACEMENT], [this.states.AWAITING_PLACEMENT]: [this.states.PROCESSING_TURN, this.states.AWAITING_ROLL, this.states.SUPERPOWER_ACTIVE], [this.states.SUPERPOWER_ACTIVE]: [this.states.AWAITING_ROLL, this.states.AWAITING_PLACEMENT, this.states.PROCESSING_TURN], [this.states.PROCESSING_TURN]: [this.states.AWAITING_ROLL, this.states.GAME_OVER], [this.states.GAME_OVER]: [this.states.PRE_GAME] }; }
             setState(newState) { if (!this.validTransitions[this.currentState]?.includes(newState)) { console.warn(`Invalid state transition from ${this.currentState} to ${newState}`); return false; } this.currentState = newState; return true; }
             is(state) { return this.currentState === state; }
         }
-        
+
         class Game {
             constructor() {
-                this.AQUA_SYMBOLS = { 'Shell': '🐚', 'Jellyfish': '🪼', 'Octopus': '🐙', 'Pufferfish': '🐡', 'Crab': '🦀', 'Whale': '🐋' };
-                this.SPECIAL_SYMBOLS = { 'WILD': '💎', 'CURSED': '☠️' };
-                this.SYMBOLS = Object.values(this.AQUA_SYMBOLS);
-                this.SYMBOL_COLORS = { '🐚': 'text-[#D2B48C]', '🪼': 'text-[#87CEEB]', '🐙': 'text-[#9370DB]', '🐡': 'text-[#FFD700]', '🦀': 'text-[#DC143C]', '🐋': 'text-[#4169E1]', '💎': 'text-yellow-400' };
-                this.SCORING_RULES = { 7: 20, 6: 14, 5: 10, 4: 8, 3: 3 };
-                this.GRID_SIZE = 7; this.MAX_TURNS = 24; this.CROSS_MULTIPLIER = 2; this.LINE_DEATH_PENALTY = -5; this.CROSS_DEATH_PENALTY = -10; this.STUCK_BLOCK_PENALTY = -1; this.MIN_SEQUENCE_LENGTH = 3;
-                
-                this.gameStateManager = null; this.gridData = null; this.currentRoll = null; this.firstPlacementCell = null; this.turnCount = null; this.highScore = null; this.stuckBlocks = null;
-                this.lastGameState = null; this.hasSuperpowerBeenUsed = null; this.activeSuperpower = null; this.cellToExchange = null; this.currentTotalScore = null;
-                this.cursedBlockTurn = null; this.wildcardTurn = null;
+                this.gameStateManager = new GameState();
+                this.highScore = 0;
                 this.gridCells = [];
-
                 this.audio = { unlocked: false, context: null, sounds: new Map() };
+
+                // Centralized state object for the current game session
+                this.state = {};
 
                 this.DOMElements = this.getDOMElements();
 
@@ -708,15 +724,29 @@
             }
 
             init() {
-                this.gameStateManager = new GameState();
-                this.gridData = Array(this.GRID_SIZE).fill(null).map(() => Array(this.GRID_SIZE).fill(null));
-                this.currentRoll = []; this.firstPlacementCell = null; this.turnCount = 0; this.stuckBlocks = new Set();
-                this.highScore = parseInt(localStorage.getItem('allohaHighScore')) || 0;
-                this.hasSuperpowerBeenUsed = false; this.activeSuperpower = null; this.lastGameState = null; this.cellToExchange = null; this.currentTotalScore = 0;
-                this.cursedBlockTurn = Math.floor(Math.random() * 8) + 5;
-                this.wildcardTurn = Math.floor(Math.random() * 8) + 15;
-                if (this.wildcardTurn === this.cursedBlockTurn) this.wildcardTurn++;
+                this.gameStateManager.setState('PRE_GAME');
+                
+                // Initialize the state object for a new game
+                this.state = {
+                    gridData: Array(GRID_SIZE).fill(null).map(() => Array(GRID_SIZE).fill(null)),
+                    currentRoll: [],
+                    firstPlacementCell: null,
+                    turnCount: 0,
+                    stuckBlocks: new Set(),
+                    hasSuperpowerBeenUsed: false,
+                    activeSuperpower: null,
+                    lastGameState: null, // For undo functionality
+                    cellToExchange: null,
+                    currentTotalScore: 0,
+                    cursedBlockTurn: Math.floor(Math.random() * CURSED_BLOCK_TURN_RANGE) + CURSED_BLOCK_MIN_TURN,
+                    wildcardTurn: Math.floor(Math.random() * WILD_CARD_TURN_RANGE) + WILD_CARD_MIN_TURN,
+                };
+                
+                // Ensure cursed and wild turns are not the same
+                if (this.state.wildcardTurn === this.state.cursedBlockTurn) this.state.wildcardTurn++;
 
+                this.highScore = parseInt(localStorage.getItem('allohaHighScore')) || 0;
+                
                 this.audioInit();
                 this.DOMElements['high-score'].textContent = this.highScore;
                 ['game-over-modal', 'exchange-modal', 'rules-modal'].forEach(id => this.DOMElements[id].classList.remove('is-open'));
@@ -771,11 +801,11 @@
             
             calculateLineScore(line, type, lineIndex) {
                 let totalScore = 0;
-                const usedIndices = Array(this.GRID_SIZE).fill(false);
-                const wildSymbol = this.SPECIAL_SYMBOLS.WILD;
+                const usedIndices = Array(GRID_SIZE).fill(false);
+                const wildSymbol = SPECIAL_SYMBOLS.WILD;
 
-                for (let len = this.GRID_SIZE; len >= this.MIN_SEQUENCE_LENGTH; len--) {
-                    for (let i = 0; i <= this.GRID_SIZE - len; i++) {
+                for (let len = GRID_SIZE; len >= MIN_SEQUENCE_LENGTH; len--) {
+                    for (let i = 0; i <= GRID_SIZE - len; i++) {
                         const slice = line.slice(i, i + len);
                         
                         let alreadyUsed = false;
@@ -790,7 +820,7 @@
                         }
 
                         if (this.isValidSequence(slice)) {
-                            totalScore += this.SCORING_RULES[len];
+                            totalScore += SCORING_RULES[len];
                             
                             for (let k = 0; k < len; k++) {
                                 if (slice[k] !== wildSymbol) {
@@ -803,7 +833,7 @@
                 
                 if (totalScore === 0) {
                     if (this.isLineDead(line, type, lineIndex)) {
-                        return { score: this.LINE_DEATH_PENALTY };
+                        return { score: LINE_DEATH_PENALTY };
                     }
                 }
                 
@@ -812,27 +842,27 @@
             
             isValidSequence(slice) {
                 if (!slice[0]) return false;
-                if (slice.every(s => s === this.SPECIAL_SYMBOLS.WILD)) return true;
-                const regularSymbols = slice.filter(s => s !== this.SPECIAL_SYMBOLS.WILD);
+                if (slice.every(s => s === SPECIAL_SYMBOLS.WILD)) return true;
+                const regularSymbols = slice.filter(s => s !== SPECIAL_SYMBOLS.WILD);
                 if (regularSymbols.length === 0) return true;
                 if (new Set(regularSymbols).size === 1) return true;
                 return false;
             }
             
             isLineDead(line, type, lineIndex) {
-                for (let i = 0; i <= line.length - this.MIN_SEQUENCE_LENGTH; i++) {
-                    const window = line.slice(i, i + this.MIN_SEQUENCE_LENGTH);
+                for (let i = 0; i <= line.length - MIN_SEQUENCE_LENGTH; i++) {
+                    const window = line.slice(i, i + MIN_SEQUENCE_LENGTH);
                     let winnable = true;
-                    if (window.includes(this.SPECIAL_SYMBOLS.CURSED)) { winnable = false; continue; }
-                    for (let j = 0; j < this.MIN_SEQUENCE_LENGTH; j++) {
+                    if (window.includes(SPECIAL_SYMBOLS.CURSED)) { winnable = false; continue; }
+                    for (let j = 0; j < MIN_SEQUENCE_LENGTH; j++) {
                         let r, c;
                         if (type === 'row') { r = lineIndex; c = i + j; } else { r = i + j; c = lineIndex; }
-                        if (this.stuckBlocks.has(`${r},${c}`)) { winnable = false; break; }
+                        if (this.state.stuckBlocks.has(`${r},${c}`)) { winnable = false; break; }
                     }
                     if (!winnable) continue;
                     const nonNullSymbols = window.filter(cell => cell !== null);
                     if (nonNullSymbols.length > 0) {
-                        const regularSymbols = nonNullSymbols.filter(s => s !== this.SPECIAL_SYMBOLS.WILD);
+                        const regularSymbols = nonNullSymbols.filter(s => s !== SPECIAL_SYMBOLS.WILD);
                         if (regularSymbols.length > 0 && new Set(regularSymbols).size <= 1) { winnable = true; } 
                         else if (regularSymbols.length === 0) { winnable = true; } 
                         else { winnable = false; }
@@ -844,19 +874,19 @@
 
             calculateBonusGrids(gridData) {
                 let points = 0;
-                for (let size = this.GRID_SIZE; size >= 2; size--) {
-                    for (let r = 0; r <= this.GRID_SIZE - size; r++) {
-                        for (let c = 0; c <= this.GRID_SIZE - size; c++) {
+                for (let size = GRID_SIZE; size >= 2; size--) {
+                    for (let r = 0; r <= GRID_SIZE - size; r++) {
+                        for (let c = 0; c <= GRID_SIZE - size; c++) {
                             const firstSymbol = gridData[r][c];
-                            if (!firstSymbol || firstSymbol === this.SPECIAL_SYMBOLS.CURSED) continue;
+                            if (!firstSymbol || firstSymbol === SPECIAL_SYMBOLS.CURSED) continue;
 
                             let targetSymbol = firstSymbol;
-                            if (targetSymbol === this.SPECIAL_SYMBOLS.WILD) {
+                            if (targetSymbol === SPECIAL_SYMBOLS.WILD) {
                                 let foundSymbol = false;
                                 for (let i = r; i < r + size; i++) {
                                     for (let j = c; j < c + size; j++) {
                                         const current = gridData[i][j];
-                                        if (current && current !== this.SPECIAL_SYMBOLS.WILD && current !== this.SPECIAL_SYMBOLS.CURSED) {
+                                        if (current && current !== SPECIAL_SYMBOLS.WILD && current !== SPECIAL_SYMBOLS.CURSED) {
                                             targetSymbol = current;
                                             foundSymbol = true;
                                             break;
@@ -870,12 +900,12 @@
                             for (let i = r; i < r + size; i++) {
                                 for (let j = c; j < c + size; j++) {
                                     const currentSymbol = gridData[i][j];
-                                    if (!currentSymbol || currentSymbol === this.SPECIAL_SYMBOLS.CURSED) { isGrid = false; break; }
+                                    if (!currentSymbol || currentSymbol === SPECIAL_SYMBOLS.CURSED) { isGrid = false; break; }
                                     
-                                    if (targetSymbol === this.SPECIAL_SYMBOLS.WILD) {
-                                        if (currentSymbol !== this.SPECIAL_SYMBOLS.WILD) { isGrid = false; break; }
+                                    if (targetSymbol === SPECIAL_SYMBOLS.WILD) {
+                                        if (currentSymbol !== SPECIAL_SYMBOLS.WILD) { isGrid = false; break; }
                                     } else {
-                                        if (currentSymbol !== targetSymbol && currentSymbol !== this.SPECIAL_SYMBOLS.WILD) { isGrid = false; break; }
+                                        if (currentSymbol !== targetSymbol && currentSymbol !== SPECIAL_SYMBOLS.WILD) { isGrid = false; break; }
                                     }
                                 }
                                 if (!isGrid) break;
@@ -891,18 +921,18 @@
             }
 
             createCellElement(r, c) { const cell = document.createElement('div'); cell.dataset.row = r; cell.dataset.col = c; cell.className = this.getCellClasses(r, c); return cell; }
-            getCellClasses(r, c) { let classes = 'grid-cell bg-[#E0F2F1]'; if (r === 3 || c === 3) classes += ' cross-cell'; if (this.stuckBlocks.has(`${r},${c}`)) classes += ' stuck-cell'; return classes; }
-            updateCell(cell, r, c) { const symbol = this.gridData[r][c]; cell.className = this.getCellClasses(r, c); if (symbol) { cell.textContent = symbol; if(this.SYMBOL_COLORS[symbol]) cell.classList.add(this.SYMBOL_COLORS[symbol]); cell.classList.add('pop-in'); } else if (this.stuckBlocks.has(`${r},${c}`)) { cell.textContent = '💣'; } else { cell.textContent = ''; } }
-            addCellEventListeners(cell) { cell.addEventListener('click', this.handleCellClick.bind(this)); cell.addEventListener('mouseenter', () => { if (this.gameStateManager.is('AWAITING_PLACEMENT') || this.activeSuperpower) this.audioPlay('hover'); }); }
+            getCellClasses(r, c) { let classes = 'grid-cell bg-[#E0F2F1]'; if (r === CROSS_AXIS_INDEX || c === CROSS_AXIS_INDEX) classes += ' cross-cell'; if (this.state.stuckBlocks.has(`${r},${c}`)) classes += ' stuck-cell'; return classes; }
+            updateCell(cell, r, c) { const symbol = this.state.gridData[r][c]; cell.className = this.getCellClasses(r, c); if (symbol) { cell.textContent = symbol; if(SYMBOL_COLORS[symbol]) cell.classList.add(SYMBOL_COLORS[symbol]); cell.classList.add('pop-in'); } else if (this.state.stuckBlocks.has(`${r},${c}`)) { cell.textContent = '💣'; } else { cell.textContent = ''; } }
+            addCellEventListeners(cell) { cell.addEventListener('click', this.handleCellClick.bind(this)); cell.addEventListener('mouseenter', () => { if (this.gameStateManager.is('AWAITING_PLACEMENT') || this.state.activeSuperpower) this.audioPlay('hover'); }); }
 
             syncPanelHeights() { setTimeout(() => { if (window.innerWidth < 1024) { this.DOMElements['scoring-panel'].style.height = 'auto'; return; } const boardHeight = this.DOMElements['game-board-container']?.getBoundingClientRect().height; if (boardHeight && this.DOMElements['scoring-panel']) { this.DOMElements['scoring-panel'].style.height = `${boardHeight}px`; } }, 50); }
-            updateProgressBar() { if (!this.DOMElements['progress-bar-fill']) return; const percentage = (this.turnCount / this.MAX_TURNS) * 100; this.DOMElements['progress-bar-fill'].style.width = `${percentage}%`; }
+            updateProgressBar() { if (!this.DOMElements['progress-bar-fill']) return; const percentage = (this.state.turnCount / MAX_TURNS) * 100; this.DOMElements['progress-bar-fill'].style.width = `${percentage}%`; }
 
             renderGrid() {
                 const fragment = document.createDocumentFragment(); this.DOMElements['game-board'].innerHTML = ''; this.gridCells = [];
-                for (let r = 0; r < this.GRID_SIZE; r++) {
+                for (let r = 0; r < GRID_SIZE; r++) {
                     const row = [];
-                    for (let c = 0; c < this.GRID_SIZE; c++) {
+                    for (let c = 0; c < GRID_SIZE; c++) {
                         const cell = this.createCellElement(r, c); this.updateCell(cell, r, c); this.addCellEventListeners(cell);
                         fragment.appendChild(cell); row.push(cell);
                     }
@@ -911,12 +941,12 @@
                 this.DOMElements['game-board'].appendChild(fragment);
             }
 
-            updateFullGrid() { for (let r = 0; r < this.GRID_SIZE; r++) for (let c = 0; c < this.GRID_SIZE; c++) this.updateGridCell(r, c); }
+            updateFullGrid() { for (let r = 0; r < GRID_SIZE; r++) for (let c = 0; c < GRID_SIZE; c++) this.updateGridCell(r, c); }
             updateGridCell(r, c) { if (this.gridCells[r]?.[c]) this.updateCell(this.gridCells[r][c], r, c); }
 
             renderScorePlaceholders() {
                 this.DOMElements['row-scores-display'].innerHTML = ''; this.DOMElements['col-scores-display'].innerHTML = '';
-                for (let i = 0; i < this.GRID_SIZE; i++) {
+                for (let i = 0; i < GRID_SIZE; i++) {
                     const rowScore = document.createElement('div'); rowScore.id = `row-score-${i}`; rowScore.className = 'grid-cell bg-[#E0F2F1] text-gray-400 text-lg lg:text-2xl'; rowScore.textContent = '0'; this.DOMElements['row-scores-display'].appendChild(rowScore);
                     const colScore = document.createElement('div'); colScore.id = `col-score-${i}`; colScore.className = 'grid-cell bg-[#E0F2F1] text-gray-400 text-lg lg:text-2xl'; colScore.textContent = '0'; this.DOMElements['col-scores-display'].appendChild(colScore);
                 }
@@ -933,9 +963,9 @@
                 const container = document.createElement('div'); container.className = 'w-full flex flex-col items-center';
                 container.innerHTML = `<h2 class="text-base lg:text-lg font-semibold text-center mb-4 uppercase tracking-wider" style="color: var(--accent);">CHOOSE YOUR ALLOHA</h2>`;
                 const selector = document.createElement('div'); selector.className = 'grid grid-cols-3 gap-2 lg:gap-4';
-                this.SYMBOLS.forEach((symbol) => {
+                SYMBOLS.forEach((symbol) => {
                     const btn = document.createElement('button');
-                    btn.className = `symbol-selector-btn aspect-square rounded-xl text-4xl lg:text-5xl hover:bg-teal-100 ${this.SYMBOL_COLORS[symbol]} flex items-center justify-center`;
+                    btn.className = `symbol-selector-btn aspect-square rounded-xl text-4xl lg:text-5xl hover:bg-teal-100 ${SYMBOL_COLORS[symbol]} flex items-center justify-center`;
                     btn.textContent = symbol;
                     btn.onclick = () => this.handleSymbolSelect(symbol);
                     btn.onmouseenter = () => this.audioPlay('hover');
@@ -959,24 +989,24 @@
                 if (rollBtn) rollBtn.disabled = !this.gameStateManager.is('AWAITING_ROLL');
                 const dice1 = document.getElementById('dice-1'), dice2 = document.getElementById('dice-2');
                 if (!dice1 || !dice2) return;
-                if (this.gameStateManager.is('AWAITING_PLACEMENT') && this.currentRoll.length === 2) {
-                    dice1.textContent = this.currentRoll[0]; dice1.className = `w-14 h-14 lg:w-16 lg:h-16 rounded-xl glass-card-prominent shadow-lg flex items-center justify-center text-3xl lg:text-4xl ${this.SYMBOL_COLORS[this.currentRoll[0]] || ''}`;
-                    dice2.textContent = this.currentRoll[1]; dice2.className = `w-14 h-14 lg:w-16 lg:h-16 rounded-xl glass-card-prominent shadow-lg flex items-center justify-center text-3xl lg:text-4xl ${this.SYMBOL_COLORS[this.currentRoll[1]] || ''}`;
+                if (this.gameStateManager.is('AWAITING_PLACEMENT') && this.state.currentRoll.length === 2) {
+                    dice1.textContent = this.state.currentRoll[0]; dice1.className = `w-14 h-14 lg:w-16 lg:h-16 rounded-xl glass-card-prominent shadow-lg flex items-center justify-center text-3xl lg:text-4xl ${SYMBOL_COLORS[this.state.currentRoll[0]] || ''}`;
+                    dice2.textContent = this.state.currentRoll[1]; dice2.className = `w-14 h-14 lg:w-16 lg:h-16 rounded-xl glass-card-prominent shadow-lg flex items-center justify-center text-3xl lg:text-4xl ${SYMBOL_COLORS[this.state.currentRoll[1]] || ''}`;
                 } else {
                     dice1.textContent = '?'; dice1.className = 'w-14 h-14 lg:w-16 lg:h-16 rounded-xl glass-card shadow-lg flex items-center justify-center text-3xl lg:text-4xl';
                     dice2.textContent = '?'; dice2.className = 'w-14 h-14 lg:w-16 lg:h-16 rounded-xl glass-card shadow-lg flex items-center justify-center text-3xl lg:text-4xl';
                 }
             }
 
-            handleSymbolSelect(symbol) { if (!this.gameStateManager.is('PRE_GAME')) return; this.audioUnlock(); this.audioPlay('pop'); this.gridData[0][0] = symbol; this.gameStateManager.setState('AWAITING_ROLL'); this.updateGridCell(0, 0); this.renderControls(); }
+            handleSymbolSelect(symbol) { if (!this.gameStateManager.is('PRE_GAME')) return; this.audioUnlock(); this.audioPlay('pop'); this.state.gridData[0][0] = symbol; this.gameStateManager.setState('AWAITING_ROLL'); this.updateGridCell(0, 0); this.renderControls(); }
 
             handleRollDice() {
                 if (!this.gameStateManager.is('AWAITING_ROLL') || this.gameStateManager.is('GAME_OVER')) return;
-                const nextTurn = this.turnCount + 1; let tempRoll;
-                if (nextTurn === this.cursedBlockTurn) { this.audioPlay('thud'); tempRoll = [this.SYMBOLS[Math.floor(Math.random() * this.SYMBOLS.length)], this.SPECIAL_SYMBOLS.CURSED]; } 
-                else if (nextTurn === this.wildcardTurn) { this.audioPlay('chime'); tempRoll = [this.SYMBOLS[Math.floor(Math.random() * this.SYMBOLS.length)], this.SPECIAL_SYMBOLS.WILD]; } 
-                else { this.audioPlay('roll'); tempRoll = [this.SYMBOLS[Math.floor(Math.random() * this.SYMBOLS.length)], this.SYMBOLS[Math.floor(Math.random() * this.SYMBOLS.length)]]; }
-                this.currentRoll = tempRoll.sort(() => Math.random() - 0.5);
+                const nextTurn = this.state.turnCount + 1; let tempRoll;
+                if (nextTurn === this.state.cursedBlockTurn) { this.audioPlay('thud'); tempRoll = [SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)], SPECIAL_SYMBOLS.CURSED]; } 
+                else if (nextTurn === this.state.wildcardTurn) { this.audioPlay('chime'); tempRoll = [SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)], SPECIAL_SYMBOLS.WILD]; } 
+                else { this.audioPlay('roll'); tempRoll = [SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)], SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)]]; }
+                this.state.currentRoll = tempRoll.sort(() => Math.random() - 0.5);
                 this.gameStateManager.setState('ANIMATING_ROLL'); this.updateControlsState();
                 const d1 = document.getElementById('dice-1'), d2 = document.getElementById('dice-2');
                 d1.classList.add('dice-tumble'); d2.classList.add('dice-tumble');
@@ -989,26 +1019,26 @@
             handleCellClick(e) {
                 const cell = e.target.closest('[data-row]'); if (!cell) return;
                 const r = parseInt(cell.dataset.row), c = parseInt(cell.dataset.col);
-                if (this.activeSuperpower) { this.handleSuperpowerCellClick(r, c, cell); return; }
+                if (this.state.activeSuperpower) { this.handleSuperpowerCellClick(r, c, cell); return; }
                 if (!this.gameStateManager.is('AWAITING_PLACEMENT')) return;
-                if (this.firstPlacementCell) { this.handleSecondPlacement(r, c, cell); } else { this.handleFirstPlacement(r, c); }
+                if (this.state.firstPlacementCell) { this.handleSecondPlacement(r, c, cell); } else { this.handleFirstPlacement(r, c); }
             }
 
-            handleFirstPlacement(r, c) { if (!this.gridData[r][c]) { this.gridData[r][c] = this.currentRoll[0]; this.firstPlacementCell = { r, c }; this.updateGridCell(r, c); this.updateSuperpowerButtonsUI(); } }
+            handleFirstPlacement(r, c) { if (!this.state.gridData[r][c]) { this.state.gridData[r][c] = this.state.currentRoll[0]; this.state.firstPlacementCell = { r, c }; this.updateGridCell(r, c); this.updateSuperpowerButtonsUI(); } }
             handleSecondPlacement(r, c, cell) {
-                const { r: pR, c: pC } = this.firstPlacementCell;
-                if (pR === r && pC === c) { this.gridData[r][c] = null; this.firstPlacementCell = null; this.updateGridCell(r, c); this.updateSuperpowerButtonsUI(); return; }
-                if ((Math.abs(pR - r) + Math.abs(pC - c) === 1) && !this.gridData[r][c]) { this.completeMove(r, c); } 
+                const { r: pR, c: pC } = this.state.firstPlacementCell;
+                if (pR === r && pC === c) { this.state.gridData[r][c] = null; this.state.firstPlacementCell = null; this.updateGridCell(r, c); this.updateSuperpowerButtonsUI(); return; }
+                if ((Math.abs(pR - r) + Math.abs(pC - c) === 1) && !this.state.gridData[r][c]) { this.completeMove(r, c); } 
                 else { cell.classList.add('shake-animation'); setTimeout(() => cell.classList.remove('shake-animation'), 400); this.audioPlay('invalid'); }
             }
 
-            saveStateForUndo() { this.lastGameState = { gridData: JSON.parse(JSON.stringify(this.gridData)), turnCount: this.turnCount, stuckBlocks: new Set(this.stuckBlocks), currentRoll: [...this.currentRoll] }; }
-            completeMove(r, c) { this.gameStateManager.setState('PROCESSING_TURN'); this.gridData[r][c] = this.currentRoll[1]; this.firstPlacementCell = null; this.turnCount++; this.updateGridCell(r, c); this.audioPlay('pop'); setTimeout(this.processTurnEnd.bind(this), 300); }
+            saveStateForUndo() { this.state.lastGameState = { gridData: JSON.parse(JSON.stringify(this.state.gridData)), turnCount: this.state.turnCount, stuckBlocks: new Set(this.state.stuckBlocks), currentRoll: [...this.state.currentRoll] }; }
+            completeMove(r, c) { this.gameStateManager.setState('PROCESSING_TURN'); this.state.gridData[r][c] = this.state.currentRoll[1]; this.state.firstPlacementCell = null; this.state.turnCount++; this.updateGridCell(r, c); this.audioPlay('pop'); setTimeout(this.processTurnEnd.bind(this), 300); }
             
             processTurnEnd() {
                 if (this.gameStateManager.is('GAME_OVER')) return;
                 this.detectStuckBlocks(); this.updateAllScores(); this.updateProgressBar();
-                if (this.turnCount >= this.MAX_TURNS) { this.endGame("Grid is full!"); return; }
+                if (this.state.turnCount >= MAX_TURNS) { this.endGame("Grid is full!"); return; }
                 if (!this.hasValidMoves()) { this.endGame("No valid moves!"); return; }
                 this.gameStateManager.setState('AWAITING_ROLL'); this.renderControls();
             }
@@ -1029,33 +1059,33 @@
                 setTimeout(() => this.DOMElements['game-over-modal'].classList.add('is-open'), 500);
             }
 
-            hasValidMoves() { for (let r = 0; r < this.GRID_SIZE; r++) for (let c = 0; c < this.GRID_SIZE; c++) if (!this.gridData[r][c]) { const n = [[-1, 0], [1, 0], [0, -1], [0, 1]]; for (const [dr, dc] of n) { const nr = r + dr, nc = c + dc; if (nr >= 0 && nr < this.GRID_SIZE && nc >= 0 && nc < this.GRID_SIZE && !this.gridData[nr][nc]) return true; } } return false; }
-            detectStuckBlocks() { this.stuckBlocks.clear(); for (let r = 0; r < this.GRID_SIZE; r++) for (let c = 0; c < this.GRID_SIZE; c++) if (!this.gridData[r][c]) { const n = [[-1, 0], [1, 0], [0, -1], [0, 1]]; if (n.every(([dr, dc]) => { const nr = r + dr, nc = c + dc; return nr < 0 || nr >= this.GRID_SIZE || nc < 0 || nc >= this.GRID_SIZE || this.gridData[nr][nc] })) this.stuckBlocks.add(`${r},${c}`); } this.updateFullGrid(); this.DOMElements['empty-block-penalty'].textContent = -this.stuckBlocks.size; }
+            hasValidMoves() { for (let r = 0; r < GRID_SIZE; r++) for (let c = 0; c < GRID_SIZE; c++) if (!this.state.gridData[r][c]) { const n = [[-1, 0], [1, 0], [0, -1], [0, 1]]; for (const [dr, dc] of n) { const nr = r + dr, nc = c + dc; if (nr >= 0 && nr < GRID_SIZE && nc >= 0 && nc < GRID_SIZE && !this.state.gridData[nr][nc]) return true; } } return false; }
+            detectStuckBlocks() { this.state.stuckBlocks.clear(); for (let r = 0; r < GRID_SIZE; r++) for (let c = 0; c < GRID_SIZE; c++) if (!this.state.gridData[r][c]) { const n = [[-1, 0], [1, 0], [0, -1], [0, 1]]; if (n.every(([dr, dc]) => { const nr = r + dr, nc = c + dc; return nr < 0 || nr >= GRID_SIZE || nc < 0 || nc >= GRID_SIZE || this.state.gridData[nr][nc] })) this.state.stuckBlocks.add(`${r},${c}`); } this.updateFullGrid(); this.DOMElements['empty-block-penalty'].textContent = -this.state.stuckBlocks.size; }
             
             updateAllScores() {
-                const oldScore = this.currentTotalScore;
-                const rS = this.calculateRowScores(), cS = this.calculateColumnScores(), crS = this.calculateCrossScore(), bS = this.calculateBonusGrids(this.gridData);
-                const newScore = rS.total + cS.total + crS + bS - this.stuckBlocks.size;
+                const oldScore = this.state.currentTotalScore;
+                const rS = this.calculateRowScores(), cS = this.calculateColumnScores(), crS = this.calculateCrossScore(), bS = this.calculateBonusGrids(this.state.gridData);
+                const newScore = rS.total + cS.total + crS + bS - this.state.stuckBlocks.size;
                 const scoreDiff = newScore - oldScore;
                 if (scoreDiff > 0) { this.triggerScoreBubbles(Math.min(10, Math.ceil(scoreDiff / 2))); }
-                this.currentTotalScore = newScore;
-                this.updateScoreDisplays(rS.total, cS.total, crS, bS, this.stuckBlocks.size);
+                this.state.currentTotalScore = newScore;
+                this.updateScoreDisplays(rS.total, cS.total, crS, bS, this.state.stuckBlocks.size);
                 this.updateIndividualScores(rS.individual, cS.individual);
             }
-            calculateTotalScore() { return this.currentTotalScore; }
-            calculateRowScores() { let t = 0, ind = []; for (let i = 0; i < this.GRID_SIZE; i++) { const { score: s } = this.calculateLineScore(this.gridData[i], 'row', i); ind.push(s); t += s; } return { total: t, individual: ind }; }
-            calculateColumnScores() { let t = 0, ind = []; for (let i = 0; i < this.GRID_SIZE; i++) { const col = this.gridData.map(row => row[i]); const { score: s } = this.calculateLineScore(col, 'col', i); ind.push(s); t += s; } return { total: t, individual: ind }; }
+            calculateTotalScore() { return this.state.currentTotalScore; }
+            calculateRowScores() { let t = 0, ind = []; for (let i = 0; i < GRID_SIZE; i++) { const { score: s } = this.calculateLineScore(this.state.gridData[i], 'row', i); ind.push(s); t += s; } return { total: t, individual: ind }; }
+            calculateColumnScores() { let t = 0, ind = []; for (let i = 0; i < GRID_SIZE; i++) { const col = this.state.gridData.map(row => row[i]); const { score: s } = this.calculateLineScore(col, 'col', i); ind.push(s); t += s; } return { total: t, individual: ind }; }
             
             calculateCrossScore() {
                 let bonusScore = 0;
-                const crossRow = this.gridData[3];
-                const crossCol = this.gridData.map(row => row[3]);
-                const rowResult = this.calculateLineScore(crossRow, 'row', 3);
-                const colResult = this.calculateLineScore(crossCol, 'col', 3);
+                const crossRow = this.state.gridData[CROSS_AXIS_INDEX];
+                const crossCol = this.state.gridData.map(row => row[CROSS_AXIS_INDEX]);
+                const rowResult = this.calculateLineScore(crossRow, 'row', CROSS_AXIS_INDEX);
+                const colResult = this.calculateLineScore(crossCol, 'col', CROSS_AXIS_INDEX);
                 if (rowResult.score > 0) { bonusScore += rowResult.score; } 
-                else if (rowResult.score === this.LINE_DEATH_PENALTY) { bonusScore += this.CROSS_DEATH_PENALTY - this.LINE_DEATH_PENALTY; }
+                else if (rowResult.score === LINE_DEATH_PENALTY) { bonusScore += CROSS_DEATH_PENALTY - LINE_DEATH_PENALTY; }
                 if (colResult.score > 0) { bonusScore += colResult.score; } 
-                else if (colResult.score === this.LINE_DEATH_PENALTY) { bonusScore += this.CROSS_DEATH_PENALTY - this.LINE_DEATH_PENALTY; }
+                else if (colResult.score === LINE_DEATH_PENALTY) { bonusScore += CROSS_DEATH_PENALTY - LINE_DEATH_PENALTY; }
                 return bonusScore;
             }
 
@@ -1090,26 +1120,26 @@
             updateScoreElement(id, score) { const el = document.getElementById(id); if (el && parseInt(el.textContent) !== score) { el.textContent = score; el.classList.toggle('text-red-500', score < 0); if (score !== 0) { el.classList.add('score-flash'); setTimeout(() => el.classList.remove('score-flash'), 600); } } }
 
             updateSuperpowerButtonsUI() {
-                const isUsed = this.hasSuperpowerBeenUsed; const isMidMove = this.firstPlacementCell !== null; const isPowerActive = this.activeSuperpower !== null;
+                const isUsed = this.state.hasSuperpowerBeenUsed; const isMidMove = this.state.firstPlacementCell !== null; const isPowerActive = this.state.activeSuperpower !== null;
                 const pastLivesBtn = document.getElementById('past-lives-btn'); const bombBaeBtn = document.getElementById('bomb-bae-btn'); const noReturnBtn = document.getElementById('no-return-btn');
-                if (pastLivesBtn) pastLivesBtn.disabled = isUsed || !this.lastGameState || isMidMove || isPowerActive;
-                if (bombBaeBtn) bombBaeBtn.disabled = isUsed || this.stuckBlocks.size === 0 || isMidMove || isPowerActive;
+                if (pastLivesBtn) pastLivesBtn.disabled = isUsed || !this.state.lastGameState || isMidMove || isPowerActive;
+                if (bombBaeBtn) bombBaeBtn.disabled = isUsed || this.state.stuckBlocks.size === 0 || isMidMove || isPowerActive;
                 if (noReturnBtn) noReturnBtn.disabled = isUsed || isMidMove || isPowerActive;
                 [pastLivesBtn, bombBaeBtn, noReturnBtn].forEach(btn => btn?.classList.remove('superpower-btn--active'));
-                if (this.activeSuperpower) { const id = { 'bombBae': 'bomb-bae-btn', 'noReturn': 'no-return-btn' }[this.activeSuperpower]; const activeBtn = document.getElementById(id); if (activeBtn) activeBtn.classList.add('superpower-btn--active'); }
-                document.body.classList.toggle('cursor-target', this.activeSuperpower === 'bombBae');
+                if (this.state.activeSuperpower) { const id = { 'bombBae': 'bomb-bae-btn', 'noReturn': 'no-return-btn' }[this.state.activeSuperpower]; const activeBtn = document.getElementById(id); if (activeBtn) activeBtn.classList.add('superpower-btn--active'); }
+                document.body.classList.toggle('cursor-target', this.state.activeSuperpower === 'bombBae');
             }
 
             handleSuperpowerCellClick(r, c, cell) {
-                if (this.gridData[r][c] === this.SPECIAL_SYMBOLS.CURSED) { this.audioPlay('invalid'); cell.classList.add('shake-animation'); setTimeout(() => cell.classList.remove('shake-animation'), 400); return; }
-                if (this.activeSuperpower === 'bombBae' && this.stuckBlocks.has(`${r},${c}`)) { this.stuckBlocks.delete(`${r},${c}`); this.gridData[r][c] = this.SYMBOLS[Math.floor(Math.random() * this.SYMBOLS.length)]; this.consumeSuperpower(); this.gameStateManager.setState('AWAITING_ROLL'); this.renderControls(); } 
-                else if (this.activeSuperpower === 'noReturn' && this.gridData[r][c]) { this.showSymbolSelectorForExchange(r, c); } 
+                if (this.state.gridData[r][c] === SPECIAL_SYMBOLS.CURSED) { this.audioPlay('invalid'); cell.classList.add('shake-animation'); setTimeout(() => cell.classList.remove('shake-animation'), 400); return; }
+                if (this.state.activeSuperpower === 'bombBae' && this.state.stuckBlocks.has(`${r},${c}`)) { this.state.stuckBlocks.delete(`${r},${c}`); this.state.gridData[r][c] = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)]; this.consumeSuperpower(); this.gameStateManager.setState('AWAITING_ROLL'); this.renderControls(); } 
+                else if (this.state.activeSuperpower === 'noReturn' && this.state.gridData[r][c]) { this.showSymbolSelectorForExchange(r, c); } 
                 else { this.audioPlay('invalid'); }
             }
             
             showSymbolSelectorForExchange(r, c) {
-                 this.cellToExchange = {r, c}; this.DOMElements['exchange-options'].innerHTML = '';
-                 this.SYMBOLS.filter(s => s !== this.gridData[r][c]).forEach(symbol => {
+                 this.state.cellToExchange = {r, c}; this.DOMElements['exchange-options'].innerHTML = '';
+                 SYMBOLS.filter(s => s !== this.state.gridData[r][c]).forEach(symbol => {
                     const btn = document.createElement('button'); btn.className = 'symbol-selector-btn w-20 h-20 text-4xl rounded-lg hover:bg-teal-100 flex items-center justify-center'; btn.textContent = symbol;
                     btn.onclick = () => this.handleSymbolExchange(symbol); this.DOMElements['exchange-options'].appendChild(btn);
                  });
@@ -1117,13 +1147,13 @@
             }
             
             handleSymbolExchange(newSymbol) {
-                if (!this.cellToExchange) return;
-                const {r, c} = this.cellToExchange; this.gridData[r][c] = newSymbol;
-                this.DOMElements['exchange-modal'].classList.remove('is-open'); this.cellToExchange = null;
+                if (!this.state.cellToExchange) return;
+                const {r, c} = this.state.cellToExchange; this.state.gridData[r][c] = newSymbol;
+                this.DOMElements['exchange-modal'].classList.remove('is-open'); this.state.cellToExchange = null;
                 this.consumeSuperpower(); this.gameStateManager.setState('AWAITING_ROLL'); this.renderControls();
             }
 
-            consumeSuperpower() { this.audioPlay('power-use'); this.hasSuperpowerBeenUsed = true; this.activeSuperpower = null; this.updateFullGrid(); this.updateAllScores(); this.updateSuperpowerButtonsUI(); }
+            consumeSuperpower() { this.audioPlay('power-use'); this.state.hasSuperpowerBeenUsed = true; this.state.activeSuperpower = null; this.updateFullGrid(); this.updateAllScores(); this.updateSuperpowerButtonsUI(); }
 
             setupSuperpowerEventListeners() {
                 const pastLivesBtn = document.getElementById('past-lives-btn');
@@ -1131,19 +1161,19 @@
                     pastLivesBtn.addEventListener('click', () => {
                         if (pastLivesBtn.disabled) return;
                         this.audioPlay('power-activate');
-                        this.gridData = this.lastGameState.gridData; this.turnCount = this.lastGameState.turnCount; this.stuckBlocks = this.lastGameState.stuckBlocks; this.currentRoll = this.lastGameState.currentRoll; this.lastGameState = null; 
-                        this.hasSuperpowerBeenUsed = true; this.activeSuperpower = null; this.audioPlay('power-use');
+                        this.state.gridData = this.state.lastGameState.gridData; this.state.turnCount = this.state.lastGameState.turnCount; this.state.stuckBlocks = this.state.lastGameState.stuckBlocks; this.state.currentRoll = this.state.lastGameState.currentRoll; this.state.lastGameState = null; 
+                        this.state.hasSuperpowerBeenUsed = true; this.state.activeSuperpower = null; this.audioPlay('power-use');
                         this.updateFullGrid(); this.updateAllScores(); this.updateSuperpowerButtonsUI();
                         this.updateProgressBar(); this.gameStateManager.setState('AWAITING_PLACEMENT'); this.updateControlsState();
                     });
                 }
                 const bombBaeBtn = document.getElementById('bomb-bae-btn');
                 if (bombBaeBtn) {
-                    bombBaeBtn.addEventListener('click', () => { if (bombBaeBtn.disabled) return; this.activeSuperpower = 'bombBae'; this.gameStateManager.setState('SUPERPOWER_ACTIVE'); this.audioPlay('power-activate'); this.updateSuperpowerButtonsUI(); });
+                    bombBaeBtn.addEventListener('click', () => { if (bombBaeBtn.disabled) return; this.state.activeSuperpower = 'bombBae'; this.gameStateManager.setState('SUPERPOWER_ACTIVE'); this.audioPlay('power-activate'); this.updateSuperpowerButtonsUI(); });
                 }
                 const noReturnBtn = document.getElementById('no-return-btn');
                 if (noReturnBtn) {
-                    noReturnBtn.addEventListener('click', () => { if (noReturnBtn.disabled) return; this.activeSuperpower = 'noReturn'; this.gameStateManager.setState('SUPERPOWER_ACTIVE'); this.audioPlay('power-activate'); this.updateSuperpowerButtonsUI(); });
+                    noReturnBtn.addEventListener('click', () => { if (noReturnBtn.disabled) return; this.state.activeSuperpower = 'noReturn'; this.gameStateManager.setState('SUPERPOWER_ACTIVE'); this.audioPlay('power-activate'); this.updateSuperpowerButtonsUI(); });
                 }
             }
 
@@ -1156,7 +1186,7 @@
                 window.addEventListener('resize', this.syncPanelHeights.bind(this));
                 document.addEventListener('keydown', (e) => {
                     if (e.key === 'Escape') {
-                        if (this.activeSuperpower) { this.activeSuperpower = null; this.updateSuperpowerButtonsUI(); this.gameStateManager.setState(this.firstPlacementCell ? 'AWAITING_PLACEMENT' : 'AWAITING_ROLL'); } 
+                        if (this.state.activeSuperpower) { this.state.activeSuperpower = null; this.updateSuperpowerButtonsUI(); this.gameStateManager.setState(this.state.firstPlacementCell ? 'AWAITING_PLACEMENT' : 'AWAITING_ROLL'); } 
                         else { ['rules-modal', 'game-over-modal', 'exchange-modal'].forEach(id => this.DOMElements[id].classList.remove('is-open')); }
                     }
                     if ((e.key === ' ' || e.key === 'Enter') && this.gameStateManager.is('AWAITING_ROLL')) { e.preventDefault(); this.handleRollDice(); }
