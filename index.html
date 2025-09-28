@@ -7,27 +7,69 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Pacifico&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 100%);
+            /* Enhanced background with more depth */
+            --bg: linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 50%, #80DEEA 100%);
             --card: rgba(255, 255, 255, 0.95);
             --text: #2D3748;
             --text-secondary: #718096;
             --accent: #20B2AA; /* LightSeaGreen */
             --accent-light: #E0F2F1;
-            --accent-gradient: linear-gradient(135deg, #20B2AA 0%, #48D1CC 100%);
+            /* Enhanced gradients with more stops */
+            --accent-gradient: linear-gradient(135deg, #20B2AA 0%, #48D1CC 50%, #40E0D0 100%);
             --cross-highlight: linear-gradient(135deg, #E6E6FA 0%, #D8BFD8 100%); /* Periwinkle Blue */
             --stuck-block: linear-gradient(135deg, #A7C7E7 0%, #B7D7F7 100%);
-            --glass-primary: rgba(255, 255, 255, 0.25);
-            --glass-secondary: rgba(255, 255, 255, 0.15);
-            --shadow-soft: 0 6px 20px rgba(0, 0, 0, 0.12);
-            --shadow-medium: 0 12px 40px rgba(0, 0, 0, 0.12);
-            --shadow-strong: 0 20px 60px rgba(0, 0, 0, 0.15);
+            
+            /* Enhanced glass effects */
+            --glass-primary: rgba(255, 255, 255, 0.3);
+            --glass-secondary: rgba(255, 255, 255, 0.18);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            
+            /* Progressive shadow system */
+            --shadow-minimal: 0 2px 8px rgba(0, 0, 0, 0.06);
+            --shadow-soft: 0 6px 20px rgba(0, 0, 0, 0.08);
+            --shadow-medium: 0 12px 40px rgba(0, 0, 0, 0.10);
+            --shadow-strong: 0 20px 60px rgba(0, 0, 0, 0.12);
+            --shadow-dramatic: 0 30px 80px rgba(0, 0, 0, 0.15);
+            
+            /* Animation curves */
+            --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+            --ease-quick: cubic-bezier(0.25, 0.8, 0.25, 1);
+            
+            /* New shimmer effects */
+            --shimmer-gradient: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%);
+            --progress-shimmer: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.6) 50%, transparent 100%);
+        }
+        
+        /* Accessibility: Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            
+            .themed-button::before,
+            .progress-bar-fill::after {
+                display: none;
+            }
+        }
+        
+        /* Accessibility: High contrast mode */
+        @media (prefers-contrast: high) {
+            :root {
+                --shadow-soft: 0 6px 20px rgba(0, 0, 0, 0.25);
+                --shadow-medium: 0 12px 40px rgba(0, 0, 0, 0.30);
+                --glass-primary: rgba(255, 255, 255, 0.5);
+                --glass-secondary: rgba(255, 255, 255, 0.3);
+            }
         }
         
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Inter', sans-serif;
             background: var(--bg);
             color: var(--text);
             overflow: hidden; /* Prevent scrollbars from ambient bubbles */
@@ -64,22 +106,36 @@
             }
         }
         
+        /* Loading states */
+        .skeleton-shimmer {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        
         .rounded-card {
             border-radius: 16px;
             background: var(--card);
             box-shadow: var(--shadow-soft);
         }
         
+        /* Enhanced button micro-interactions */
         .themed-button {
             font-weight: 600;
             border-radius: 16px;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s var(--ease-smooth);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             box-shadow: var(--shadow-soft);
             border: none;
             position: relative;
             overflow: hidden;
+            transform-origin: center;
         }
         
         .themed-button::before {
@@ -89,8 +145,9 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: left 0.6s ease;
+            background: var(--shimmer-gradient);
+            transition: left 0.6s var(--ease-smooth);
+            z-index: 1;
         }
         
         .themed-button:hover::before {
@@ -98,39 +155,80 @@
         }
         
         .themed-button:active {
-            transform: scale(0.96);
+            transform: scale(0.98);
+            transition-duration: 0.1s;
         }
         
         .themed-button:hover {
-            transform: translateY(-3px);
+            transform: translateY(-2px) scale(1.02);
             box-shadow: var(--shadow-medium);
         }
         
+        /* Shimmer effect for special buttons */
+        .themed-button.shimmer-active::before {
+            animation: shimmer-sweep 2s infinite;
+        }
+
+        @keyframes shimmer-sweep {
+            0% { left: -100%; }
+            50% { left: 100%; }
+            100% { left: 100%; }
+        }
+        
+        /* Enhanced glassmorphism */
         .glass-card {
-            background: var(--glass-secondary);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: linear-gradient(135deg, var(--glass-secondary) 0%, rgba(255,255,255,0.1) 100%);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
             box-shadow: var(--shadow-soft), 
-                        0 0 0 1px rgba(255, 255, 255, 0.15),
+                        0 0 0 1px var(--glass-border),
                         inset 0 1px 0 rgba(255, 255, 255, 0.3);
             border: none !important;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s var(--ease-smooth);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Score card hover effects */
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s var(--ease-smooth);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .glass-card:hover::before {
+            opacity: 1;
         }
         
         .glass-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-strong), 
-                        0 0 0 1px rgba(255, 255, 255, 0.2),
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-medium), 
+                        0 0 0 1px rgba(255, 255, 255, 0.25),
                         inset 0 1px 0 rgba(255, 255, 255, 0.4);
         }
         
+        /* Ensure content stays above the shine effect */
+        .glass-card > * {
+            position: relative;
+            z-index: 1;
+        }
+        
         .glass-card-prominent {
-            background: var(--glass-primary);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
+            background: linear-gradient(135deg, var(--glass-primary) 0%, rgba(255,255,255,0.2) 100%);
+            backdrop-filter: blur(25px) saturate(200%);
+            -webkit-backdrop-filter: blur(25px) saturate(200%);
             box-shadow: var(--shadow-medium), 
-                        0 0 0 1px rgba(255, 255, 255, 0.2),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.35);
+                        0 0 0 1px rgba(255, 255, 255, 0.25),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.4),
+                        0 0 40px rgba(32, 178, 170, 0.1);
             border: none !important;
         }
         
@@ -141,7 +239,7 @@
             align-items: center;
             justify-content: center;
             font-size: clamp(1.2rem, 5.5vw, 2.75rem);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s var(--ease-smooth);
             background: rgba(255, 255, 255, 0.95);
             border: 1px solid rgba(0, 0, 0, 0.04);
             position: relative;
@@ -178,6 +276,37 @@
             -webkit-backdrop-filter: blur(25px);
         }
         
+        /* Enhanced progress bar */
+        .progress-bar-container {
+            position: relative;
+            overflow: hidden;
+            background: rgba(178, 235, 242, 0.3);
+            border-radius: 9999px;
+        }
+
+        .progress-bar-fill {
+            background: var(--accent-gradient);
+            position: relative;
+            overflow: hidden;
+            transition: width 0.3s var(--ease-smooth);
+        }
+
+        .progress-bar-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--progress-shimmer);
+            animation: progress-shimmer 2s infinite;
+        }
+
+        @keyframes progress-shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
         @keyframes pop-in {
             0% { opacity: 0; transform: scale(0.5) rotate(-180deg); }
             50% { opacity: 1; transform: scale(1.1) rotate(-90deg); }
@@ -185,7 +314,7 @@
         }
         
         .pop-in {
-            animation: pop-in 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            animation: pop-in 0.4s var(--ease-bounce);
         }
 
         @keyframes shake {
@@ -207,7 +336,7 @@
         }
         
         .dice-tumble {
-            animation: dice-tumble 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            animation: dice-tumble 0.6s var(--ease-bounce);
         }
         
         @keyframes pulse {
@@ -236,11 +365,11 @@
         }
         
         .modal {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s var(--ease-smooth);
         }
         
         .modal-content {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s var(--ease-smooth);
         }
         
         .modal.is-open {
@@ -262,6 +391,7 @@
         .symbol-selector-btn {
             position: relative;
             overflow: hidden;
+            transition: all 0.2s var(--ease-smooth);
         }
         
         .symbol-selector-btn::after {
@@ -289,7 +419,7 @@
         }
         
         .score-update {
-            animation: score-update 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+            animation: score-update 0.5s var(--ease-quick);
         }
 
         .superpower-btn {
@@ -444,8 +574,8 @@
                     <button id="new-game-btn" class="flex-1 py-2 px-4 themed-button text-white font-semibold rounded-xl text-sm" style="background: var(--accent-gradient);">New Game</button>
                 </div>
 
-                <div class="relative w-full h-2.5 bg-teal-100 rounded-full overflow-hidden">
-                    <div id="progress-bar-fill" class="h-full rounded-full transition-all duration-300" style="width: 0%; background: var(--accent-gradient);"></div>
+                <div class="relative w-full h-2.5 progress-bar-container">
+                    <div id="progress-bar-fill" class="h-full rounded-full progress-bar-fill transition-all duration-300" style="width: 0%;"></div>
                 </div>
                 
                 <div id="controls-area" class="controls-area"></div>
