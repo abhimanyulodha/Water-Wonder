@@ -771,32 +771,47 @@
             
             calculateLineScore(line, type, lineIndex) {
                 let totalScore = 0;
-                let temp = [...line];
-                let foundAnySequence = false;
-                let foundSequenceThisPass = true;
-                while (foundSequenceThisPass) {
-                    foundSequenceThisPass = false;
-                    for (let len = this.GRID_SIZE; len >= this.MIN_SEQUENCE_LENGTH; len--) {
-                        for (let i = 0; i <= temp.length - len; i++) {
-                            const slice = temp.slice(i, i + len);
-                            if (slice.includes(null) || slice.includes(this.SPECIAL_SYMBOLS.CURSED)) continue;
-                            if (this.isValidSequence(slice)) {
-                                totalScore += this.SCORING_RULES[len];
-                                foundAnySequence = true;
-                                foundSequenceThisPass = true;
-                                temp.fill(null, i, i + len);
+                const usedIndices = Array(this.GRID_SIZE).fill(false);
+                const wildSymbol = this.SPECIAL_SYMBOLS.WILD;
+
+                for (let len = this.GRID_SIZE; len >= this.MIN_SEQUENCE_LENGTH; len--) {
+                    for (let i = 0; i <= this.GRID_SIZE - len; i++) {
+                        const slice = line.slice(i, i + len);
+                        
+                        let alreadyUsed = false;
+                        for (let k = 0; k < len; k++) {
+                            if (slice[k] !== wildSymbol && usedIndices[i + k]) {
+                                alreadyUsed = true;
                                 break;
                             }
                         }
-                        if (foundSequenceThisPass) break;
+                        if (alreadyUsed) {
+                            continue;
+                        }
+
+                        if (this.isValidSequence(slice)) {
+                            totalScore += this.SCORING_RULES[len];
+                            
+                            for (let k = 0; k < len; k++) {
+                                if (slice[k] !== wildSymbol) {
+                                    usedIndices[i + k] = true;
+                                }
+                            }
+                        }
                     }
                 }
-                if (foundAnySequence) return { score: totalScore };
-                if (this.isLineDead(line, type, lineIndex)) return { score: this.LINE_DEATH_PENALTY };
-                return { score: 0 };
+                
+                if (totalScore === 0) {
+                    if (this.isLineDead(line, type, lineIndex)) {
+                        return { score: this.LINE_DEATH_PENALTY };
+                    }
+                }
+                
+                return { score: totalScore };
             }
             
             isValidSequence(slice) {
+                if (!slice[0]) return false;
                 if (slice.every(s => s === this.SPECIAL_SYMBOLS.WILD)) return true;
                 const regularSymbols = slice.filter(s => s !== this.SPECIAL_SYMBOLS.WILD);
                 if (regularSymbols.length === 0) return true;
