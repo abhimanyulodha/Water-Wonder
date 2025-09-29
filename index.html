@@ -3,24 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ALLOHA</title>
+    <title>Alloha - Water Wonder</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Pacifico&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Enhanced background with more depth */
-            --bg: linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 50%, #80DEEA 100%);
+            /* Water Wonder Theme Colors */
+            --bg: linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 100%);
             --card: rgba(255, 255, 255, 0.95);
             --text: #2D3748;
             --text-secondary: #718096;
             --accent: #20B2AA; /* LightSeaGreen */
             --accent-light: #E0F2F1;
-            /* Enhanced gradients with more stops */
-            --accent-gradient: linear-gradient(135deg, #20B2AA 0%, #48D1CC 50%, #40E0D0 100%);
-            --cross-highlight: linear-gradient(135deg, #E6E6FA 0%, #D8BFD8 100%); /* Periwinkle Blue */
-            --stuck-block: linear-gradient(135deg, #A7C7E7 0%, #B7D7F7 100%);
+            --accent-gradient: linear-gradient(135deg, #20B2AA 0%, #48D1CC 100%);
+            --cross-highlight: linear-gradient(135deg, #E6E6FA 0%, #D8BFD8 100%); /* Periwinkle */
+            --stuck-block: linear-gradient(135deg, #A7C7E7 0%, #B7D7F7 100%); /* Light Steel Blue */
             
             /* Enhanced glass effects */
             --glass-primary: rgba(255, 255, 255, 0.3);
@@ -28,11 +27,11 @@
             --glass-border: rgba(255, 255, 255, 0.2);
             
             /* Progressive shadow system */
-            --shadow-minimal: 0 2px 8px rgba(0, 0, 0, 0.06);
-            --shadow-soft: 0 6px 20px rgba(0, 0, 0, 0.08);
-            --shadow-medium: 0 12px 40px rgba(0, 0, 0, 0.10);
-            --shadow-strong: 0 20px 60px rgba(0, 0, 0, 0.12);
-            --shadow-dramatic: 0 30px 80px rgba(0, 0, 0, 0.15);
+            --shadow-minimal: 0 2px 8px rgba(0, 0, 0, 0.04);
+            --shadow-soft: 0 6px 20px rgba(0, 0, 0, 0.06);
+            --shadow-medium: 0 12px 40px rgba(0, 0, 0, 0.08);
+            --shadow-strong: 0 20px 60px rgba(0, 0, 0, 0.10);
+            --shadow-dramatic: 0 30px 80px rgba(0, 0, 0, 0.12);
             
             /* Animation curves */
             --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
@@ -210,8 +209,8 @@
             justify-content: center;
             font-size: clamp(1.2rem, 5.5vw, 2.75rem);
             transition: all 0.3s var(--ease-smooth);
-            background: rgba(255, 255, 255, 0.95);
-            border: 1px solid rgba(0, 0, 0, 0.04);
+            background: var(--accent-light);
+            border: 1px solid rgba(0, 0, 0, 0.02);
             position: relative;
             overflow: hidden;
         }
@@ -233,7 +232,7 @@
         }
         
         .grid-cell:hover {
-            background: rgba(178, 235, 242, 0.8);
+            background: #B2EBF2;
             transform: translateY(-2px);
             box-shadow: var(--shadow-soft);
         }
@@ -396,7 +395,7 @@
             background: transparent;
             border: none;
             box-shadow: none;
-            color: var(--accent);
+            color: var(--text-secondary); 
             font-weight: 500;
             border-radius: 12px;
             padding: 8px;
@@ -431,6 +430,20 @@
         .alloha-logo svg {
             width: 100%;
             height: 100%;
+        }
+        .alloha-logo svg path, .alloha-logo svg g {
+            fill: var(--accent) !important; 
+        }
+        #close-rules-btn, #close-game-over-btn {
+            color: var(--text-secondary);
+        }
+        #close-rules-btn:hover, #close-game-over-btn:hover {
+            color: var(--text);
+            background-color: var(--accent-light);
+        }
+        .score-display-cell {
+            background: var(--accent-light) !important;
+            color: var(--text-secondary);
         }
     </style>
 </head>
@@ -551,24 +564,24 @@
                 
                 <div class="grid grid-cols-2 gap-2 lg:gap-3 text-center">
                     <div class="glass-card rounded-xl px-3 py-2">
-                        <h3 class="text-xs font-semibold uppercase tracking-wider mb-1" style="color: #4A5568;">Total Score</h3>
+                        <h3 class="text-xs font-semibold uppercase tracking-wider mb-1" style="color: var(--text-secondary);">Total Score</h3>
                         <p id="total-score" class="text-2xl font-bold transition-all duration-300" style="color: var(--accent);">0</p>
                     </div>
                     <div class="glass-card rounded-xl px-3 py-2">
-                        <h3 class="text-xs font-semibold uppercase tracking-wider mb-1" style="color: #4A5568;">High Score</h3>
+                        <h3 class="text-xs font-semibold uppercase tracking-wider mb-1" style="color: var(--text-secondary);">High Score</h3>
                         <p id="high-score" class="text-2xl font-bold" style="color: #FFD700;">0</p>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-2 lg:gap-3 text-center">
-                    <div class="glass-card rounded-xl px-3 py-2"><h3 class="text-xs font-semibold uppercase tracking-wider mb-1" style="color: #4A5568;">Rows</h3><p id="rows-total-score" class="text-lg font-bold">0</p></div>
-                    <div class="glass-card rounded-xl px-3 py-2"><h3 class="text-xs font-semibold uppercase tracking-wider mb-1" style="color: #4A5568;">Columns</h3><p id="cols-total-score" class="text-lg font-bold">0</p></div>
-                    <div class="glass-card rounded-xl px-3 py-2"><h3 class="text-xs font-semibold uppercase tracking-wider mb-1" style="color: #4A5568;">Twinning</h3><p id="cross-total-score" class="text-lg font-bold" style="color: #FFD700;">0</p></div>
-                    <div class="glass-card rounded-xl px-3 py-2"><h3 class="text-xs font-semibold uppercase tracking-wider mb-1" style="color: #4A5568;">Grid Bonus</h3><p id="bonus-grid-score" class="text-lg font-bold" style="color: #FFD700;">0</p></div>
+                    <div class="glass-card rounded-xl px-3 py-2"><h3 class="text-xs font-semibold uppercase tracking-wider mb-1" style="color: var(--text-secondary);">Rows</h3><p id="rows-total-score" class="text-lg font-bold">0</p></div>
+                    <div class="glass-card rounded-xl px-3 py-2"><h3 class="text-xs font-semibold uppercase tracking-wider mb-1" style="color: var(--text-secondary);">Columns</h3><p id="cols-total-score" class="text-lg font-bold">0</p></div>
+                    <div class="glass-card rounded-xl px-3 py-2"><h3 class="text-xs font-semibold uppercase tracking-wider mb-1" style="color: var(--text-secondary);">Twinning</h3><p id="cross-total-score" class="text-lg font-bold" style="color: #FFD700;">0</p></div>
+                    <div class="glass-card rounded-xl px-3 py-2"><h3 class="text-xs font-semibold uppercase tracking-wider mb-1" style="color: var(--text-secondary);">Grid Bonus</h3><p id="bonus-grid-score" class="text-lg font-bold" style="color: #FFD700;">0</p></div>
                 </div>
                 
                 <div class="glass-card rounded-xl px-3 py-2">
-                    <div class="text-center"><h3 class="text-xs font-semibold uppercase tracking-wider mb-1" style="color: #4A5568;">Bomb Squad Charge</h3><p id="empty-block-penalty" class="text-lg font-bold" style="color: var(--accent);">0</p></div>
+                    <div class="text-center"><h3 class="text-xs font-semibold uppercase tracking-wider mb-1" style="color: var(--text-secondary);">Bomb Squad Charge</h3><p id="empty-block-penalty" class="text-lg font-bold" style="color: var(--text);">0</p></div>
                 </div>
             </div>
         </div>
@@ -577,15 +590,15 @@
     <div id="rules-modal" class="modal fixed inset-0 bg-black/60 flex items-center justify-center p-4 opacity-0 invisible z-50 backdrop-blur-sm">
         <div class="modal-content w-full max-w-lg themed-modal p-6 transform scale-95 -translate-y-4">
             <div class="flex justify-between items-center mb-4">
-                <h2 class="text-3xl font-bold" style="font-family: 'Pacifico', cursive; color: var(--accent);">How to Play</h2>
+                <h2 class="text-3xl font-bold" style="font-family: 'Pacifico', cursive; color: var(--accent);">How to Play Alloha - Water Wonder</h2>
                 <button id="close-rules-btn" class="w-10 h-10 rounded-full text-xl flex items-center justify-center font-bold">×</button>
             </div>
-            <div class="space-y-4 text-gray-700 text-sm max-h-[70vh] overflow-y-auto pr-2">
+            <div class="space-y-4 text-sm max-h-[70vh] overflow-y-auto pr-2" style="color: var(--text-secondary)">
                  <h3 class="font-bold text-lg" style="color: var(--accent);">The Objective</h3>
                  <p>Get the highest score by placing Allohas on the grid to create sequences of 3 or more identical Allohas in a line (rows or columns).</p>
                  <h3 class="font-bold text-lg" style="color: var(--accent);">Gameplay</h3>
                  <ol class="list-decimal list-inside space-y-1"><li>Choose your starting Alloha.</li><li>Click "Roll Dice" to get two new Allohas.</li><li>Place both Allohas in any two empty, adjacent (not diagonal) squares.</li></ol>
-                 <h3 class="font-bold text-lg" style="color: var(--accent);">ALLOHA Powers</h3>
+                 <h3 class="font-bold text-lg" style="color: var(--accent);">Special Powers</h3>
                  <p>Use one of three powerful, single-use abilities per game.</p>
                  <ul class="list-disc list-inside space-y-1"><li><b>Past Lives:</b> Undoes your last completed move.</li><li><b>Bomb Bae:</b> Click to activate, then click a stuck block (💣) to fill it with a random Alloha.</li><li><b>No Return:</b> Click to activate, then click any Alloha on the grid to swap it.</li></ul>
                  <h3 class="font-bold text-lg" style="color: var(--accent);">Special Blocks</h3>
@@ -624,7 +637,7 @@
     
     <div id="exchange-modal" class="modal fixed inset-0 bg-black/60 flex items-center justify-center p-4 opacity-0 invisible z-50 backdrop-blur-sm">
         <div class="modal-content w-full max-w-sm text-center themed-modal p-6 transform scale-95 -translate-y-4">
-            <h2 class="text-xl font-bold mb-4" style="color: var(--accent);">Choose a new Aqua Pet</h2>
+            <h2 class="text-xl font-bold mb-4" style="color: var(--accent);">Choose a new Alloha</h2>
             <div id="exchange-options" class="grid grid-cols-3 gap-4"></div>
         </div>
     </div>
@@ -638,10 +651,18 @@
         
         class Game {
             constructor() {
-                this.AQUA_SYMBOLS = { 'Shell': '🐚', 'Jellyfish': '🪼', 'Octopus': '🐙', 'Pufferfish': '🐡', 'Crab': '🦀', 'Whale': '🐋' };
+                this.WATER_SYMBOLS = { 'Pufferfish': '🐡', 'Crab': '🦀', 'Jellyfish': '🪼', 'Octopus': '🐙', 'Whale': '🐳', 'Fish': '🐟' };
                 this.SPECIAL_SYMBOLS = { 'WILD': '💎', 'CURSED': '☠️' };
-                this.SYMBOLS = Object.values(this.AQUA_SYMBOLS);
-                this.SYMBOL_COLORS = { '🐚': 'text-[#D2B48C]', '🪼': 'text-[#87CEEB]', '🐙': 'text-[#9370DB]', '🐡': 'text-[#FFD700]', '🦀': 'text-[#DC143C]', '🐋': 'text-[#4169E1]', '💎': 'text-yellow-400' };
+                this.SYMBOLS = Object.values(this.WATER_SYMBOLS);
+                this.SYMBOL_COLORS = { 
+                    '🐡': 'text-yellow-500',
+                    '🦀': 'text-red-500',
+                    '🪼': 'text-sky-400',
+                    '🐙': 'text-purple-500',
+                    '🐳': 'text-blue-600',
+                    '🐟': 'text-orange-400',
+                    '💎': 'text-cyan-300'
+                };
                 this.SCORING_RULES = { 7: 20, 6: 14, 5: 10, 4: 8, 3: 3 };
                 this.GRID_SIZE = 7; this.MAX_TURNS = 24; this.CROSS_MULTIPLIER = 2; this.LINE_DEATH_PENALTY = -5; this.CROSS_DEATH_PENALTY = -10; this.STUCK_BLOCK_PENALTY = -1; this.MIN_SEQUENCE_LENGTH = 3;
                 
@@ -679,7 +700,7 @@
                 this.gameStateManager = new GameState();
                 this.gridData = Array(this.GRID_SIZE).fill(null).map(() => Array(this.GRID_SIZE).fill(null));
                 this.currentRoll = []; this.firstPlacementCell = null; this.turnCount = 0; this.stuckBlocks = new Set();
-                this.highScore = parseInt(localStorage.getItem('allohaHighScore')) || 0;
+                this.highScore = parseInt(localStorage.getItem('waterWonderHighScore')) || 0;
                 this.hasSuperpowerBeenUsed = false; this.activeSuperpower = null; this.lastGameState = null; this.cellToExchange = null; this.currentTotalScore = 0;
                 this.cursedBlockTurn = Math.floor(Math.random() * 8) + 5;
                 this.wildcardTurn = Math.floor(Math.random() * 8) + 15;
@@ -842,8 +863,8 @@
             }
 
             createCellElement(r, c) { const cell = document.createElement('div'); cell.dataset.row = r; cell.dataset.col = c; cell.className = this.getCellClasses(r, c); return cell; }
-            getCellClasses(r, c) { let classes = 'grid-cell bg-[#E0F2F1]'; if (r === 3 || c === 3) classes += ' cross-cell'; if (this.stuckBlocks.has(`${r},${c}`)) classes += ' stuck-cell'; return classes; }
-            updateCell(cell, r, c) { const symbol = this.gridData[r][c]; cell.className = this.getCellClasses(r, c); if (symbol) { cell.textContent = symbol; if(this.SYMBOL_COLORS[symbol]) cell.classList.add(this.SYMBOL_COLORS[symbol]); cell.classList.add('pop-in'); } else if (this.stuckBlocks.has(`${r},${c}`)) { cell.textContent = '💣'; } else { cell.textContent = ''; } }
+            getCellClasses(r, c) { let classes = 'grid-cell'; if (r === 3 || c === 3) classes += ' cross-cell'; if (this.stuckBlocks.has(`${r},${c}`)) classes += ' stuck-cell'; return classes; }
+            updateCell(cell, r, c) { const symbol = this.gridData[r][c]; cell.className = this.getCellClasses(r, c); if (symbol) { cell.textContent = symbol; if(this.SYMBOL_COLORS[symbol]) cell.classList.add(...this.SYMBOL_COLORS[symbol].split(' ')); cell.classList.add('pop-in'); } else if (this.stuckBlocks.has(`${r},${c}`)) { cell.textContent = '💣'; } else { cell.textContent = ''; } }
             addCellEventListeners(cell) { cell.addEventListener('click', this.handleCellClick.bind(this)); cell.addEventListener('mouseenter', () => { if (this.gameStateManager.is('AWAITING_PLACEMENT') || this.activeSuperpower) this.audioPlay('hover'); }); }
 
             syncPanelHeights() { setTimeout(() => { if (window.innerWidth < 1024) { this.DOMElements['scoring-panel'].style.height = 'auto'; return; } const boardHeight = this.DOMElements['game-board-container']?.getBoundingClientRect().height; if (boardHeight && this.DOMElements['scoring-panel']) { this.DOMElements['scoring-panel'].style.height = `${boardHeight}px`; } }, 50); }
@@ -868,8 +889,8 @@
             renderScorePlaceholders() {
                 this.DOMElements['row-scores-display'].innerHTML = ''; this.DOMElements['col-scores-display'].innerHTML = '';
                 for (let i = 0; i < this.GRID_SIZE; i++) {
-                    const rowScore = document.createElement('div'); rowScore.id = `row-score-${i}`; rowScore.className = 'grid-cell bg-[#E0F2F1] text-gray-400 text-lg lg:text-2xl'; rowScore.textContent = '0'; this.DOMElements['row-scores-display'].appendChild(rowScore);
-                    const colScore = document.createElement('div'); colScore.id = `col-score-${i}`; colScore.className = 'grid-cell bg-[#E0F2F1] text-gray-400 text-lg lg:text-2xl'; colScore.textContent = '0'; this.DOMElements['col-scores-display'].appendChild(colScore);
+                    const rowScore = document.createElement('div'); rowScore.id = `row-score-${i}`; rowScore.className = 'grid-cell score-display-cell text-lg lg:text-2xl'; rowScore.textContent = '0'; this.DOMElements['row-scores-display'].appendChild(rowScore);
+                    const colScore = document.createElement('div'); colScore.id = `col-score-${i}`; colScore.className = 'grid-cell score-display-cell text-lg lg:text-2xl'; colScore.textContent = '0'; this.DOMElements['col-scores-display'].appendChild(colScore);
                 }
             }
 
@@ -886,7 +907,7 @@
                 const selector = document.createElement('div'); selector.className = 'grid grid-cols-3 gap-2 lg:gap-4';
                 this.SYMBOLS.forEach((symbol) => {
                     const btn = document.createElement('button');
-                    btn.className = `symbol-selector-btn aspect-square rounded-xl text-4xl lg:text-5xl hover:bg-teal-100 ${this.SYMBOL_COLORS[symbol]} flex items-center justify-center`;
+                    btn.className = `symbol-selector-btn aspect-square rounded-xl text-4xl lg:text-5xl hover:bg-cyan-100/50 ${this.SYMBOL_COLORS[symbol] || ''} flex items-center justify-center`;
                     btn.textContent = symbol;
                     btn.onclick = () => this.handleSymbolSelect(symbol);
                     btn.onmouseenter = () => this.audioPlay('hover');
@@ -898,7 +919,7 @@
 
             renderGameControls() {
                 const wrapper = document.createElement('div'); wrapper.className = 'w-full flex flex-col justify-center gap-3 lg:gap-4';
-                wrapper.innerHTML = `<div class="flex justify-center items-center gap-2 lg:gap-4"><button id="roll-dice-btn" class="w-14 h-14 lg:w-16 lg:h-16 text-4xl lg:text-5xl flex items-center justify-center transition-transform hover:scale-110 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed" style="color: var(--accent);">🎲</button><div id="dice-1" class="w-14 h-14 lg:w-16 lg:h-16 rounded-xl glass-card shadow-lg flex items-center justify-center text-3xl lg:text-4xl">?</div><div id="dice-2" class="w-14 h-14 lg:w-16 lg:h-16 rounded-xl glass-card shadow-lg flex items-center justify-center text-3xl lg:text-4xl">?</div></div><div id="alloha-power-panel" class="glass-card rounded-xl px-3 py-4 text-center"><h2 class="text-sm font-semibold uppercase tracking-wider mb-3 flex items-center justify-center gap-2" style="color: #4A5568;"><span style="font-size: 16px;">🪄</span>ALLOHA Powers</h2><div class="grid grid-cols-3 gap-2 text-xs"><button id="past-lives-btn" class="superpower-btn"><div>Past</div><div>Lives</div></button><button id="bomb-bae-btn" class="superpower-btn"><div>Bomb</div><div>Bae</div></button><button id="no-return-btn" class="superpower-btn"><div>No</div><div>Return</div></button></div></div>`;
+                wrapper.innerHTML = `<div class="flex justify-center items-center gap-2 lg:gap-4"><button id="roll-dice-btn" class="w-14 h-14 lg:w-16 lg:h-16 text-4xl lg:text-5xl flex items-center justify-center transition-transform hover:scale-110 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed" style="color: var(--accent);">🎲</button><div id="dice-1" class="w-14 h-14 lg:w-16 lg:h-16 rounded-xl glass-card shadow-lg flex items-center justify-center text-3xl lg:text-4xl">?</div><div id="dice-2" class="w-14 h-14 lg:w-16 lg:h-16 rounded-xl glass-card shadow-lg flex items-center justify-center text-3xl lg:text-4xl">?</div></div><div id="alloha-power-panel" class="glass-card rounded-xl px-3 py-4 text-center"><h2 class="text-sm font-semibold uppercase tracking-wider mb-3 flex items-center justify-center gap-2" style="color: var(--text-secondary);"><span style="font-size: 16px;">🪄</span>Special Powers</h2><div class="grid grid-cols-3 gap-2 text-xs"><button id="past-lives-btn" class="superpower-btn"><div>Past</div><div>Lives</div></button><button id="bomb-bae-btn" class="superpower-btn"><div>Bomb</div><div>Bae</div></button><button id="no-return-btn" class="superpower-btn"><div>No</div><div>Return</div></button></div></div>`;
                 wrapper.querySelector('#roll-dice-btn').onclick = this.handleRollDice.bind(this);
                 this.DOMElements['controls-area'].appendChild(wrapper);
                 this.updateControlsState();
@@ -968,7 +989,7 @@
                 if (this.gameStateManager.is('GAME_OVER')) return;
                 this.gameStateManager.setState('GAME_OVER'); this.updateAllScores();
                 const finalScore = this.calculateTotalScore();
-                if (finalScore > this.highScore) { this.highScore = finalScore; localStorage.setItem('allohaHighScore', this.highScore); }
+                if (finalScore > this.highScore) { this.highScore = finalScore; localStorage.setItem('waterWonderHighScore', this.highScore); }
                 this.DOMElements['game-over-reason'].textContent = reason;
                 this.DOMElements['final-score-modal'].textContent = finalScore;
                 this.DOMElements['high-score-modal'].textContent = this.highScore;
@@ -1061,7 +1082,9 @@
             showSymbolSelectorForExchange(r, c) {
                  this.cellToExchange = {r, c}; this.DOMElements['exchange-options'].innerHTML = '';
                  this.SYMBOLS.filter(s => s !== this.gridData[r][c]).forEach(symbol => {
-                    const btn = document.createElement('button'); btn.className = 'symbol-selector-btn w-20 h-20 text-4xl rounded-lg hover:bg-teal-100 flex items-center justify-center'; btn.textContent = symbol;
+                    const btn = document.createElement('button');
+                    btn.className = `symbol-selector-btn w-20 h-20 text-4xl rounded-lg hover:bg-cyan-100/50 ${this.SYMBOL_COLORS[symbol] || ''} flex items-center justify-center`;
+                    btn.textContent = symbol;
                     btn.onclick = () => this.handleSymbolExchange(symbol); this.DOMElements['exchange-options'].appendChild(btn);
                  });
                  this.DOMElements['exchange-modal'].classList.add('is-open');
@@ -1084,7 +1107,7 @@
                         this.audioPlay('power-activate');
                         this.gridData = this.lastGameState.gridData; this.turnCount = this.lastGameState.turnCount; this.stuckBlocks = this.lastGameState.stuckBlocks; this.currentRoll = this.lastGameState.currentRoll; this.lastGameState = null; 
                         this.hasSuperpowerBeenUsed = true; this.activeSuperpower = null; this.audioPlay('power-use');
-                        this.updateFullGrid(); this.updateAllScores(); this.updateSuperpowerButtonsUI();
+                        this.updateFullGrid(); this.updateAllScores();
                         this.updateProgressBar(); this.gameStateManager.setState('AWAITING_PLACEMENT'); this.updateControlsState();
                     });
                 }
